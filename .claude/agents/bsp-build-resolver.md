@@ -1,0 +1,1 @@
+../../linux-embedded/agents/bsp-build-resolver.md

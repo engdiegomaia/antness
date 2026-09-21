@@ -1,0 +1,115 @@
+name: template
+
+on:
+  push: { branches: [main] }
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: validate environment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate skills, agents, adapters and hooks
+        run: ./scripts/validate.sh
+
+      - name: Adapters are in sync with AGENTS.md
+        run: |
+          ./scripts/sync-agent-configs.sh
+          git diff --exit-code || {
+            echo "::error::A generated adapter was hand-edited or is stale."
+            echo "Run ./scripts/sync-agent-configs.sh and commit the result."
+            exit 1; }
+
+      - name: Shell scripts parse
+        run: |
+          for f in scripts/*.sh hooks/*.sh hooks/pre-commit install.sh .devcontainer/setup.sh; do
+            bash -n "$f" || { echo "::error::syntax error in $f"; exit 1; }
+          done
+
+      - name: shellcheck (errors block)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck -S error scripts/*.sh hooks/*.sh hooks/pre-commit install.sh .devcontainer/setup.sh
+
+      - name: shellcheck (warnings, advisory)
+        continue-on-error: true
+        run: shellcheck -S warning scripts/*.sh hooks/*.sh hooks/pre-commit install.sh .devcontainer/setup.sh
+
+  scaffold:
+    name: scaffold a project (${{ matrix.stack }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        stack: [zephyr, esp-idf, freertos, stm32, nuttx, yocto, torizon, buildroot, kernel, android]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scaffold
+        run: |
+          ./scripts/init-project.sh --non-interactive --force \
+            --name "test-${{ matrix.stack }}" --stack "${{ matrix.stack }}" \
+            --board "CI test board" --out "/tmp/proj-${{ matrix.stack }}"
+
+      - name: The scaffolded project validates
+        run: /tmp/proj-${{ matrix.stack }}/scripts/validate.sh /tmp/proj-${{ matrix.stack }}
+
+      - name: The scaffolded project has what it needs
+        run: |
+          cd "/tmp/proj-${{ matrix.stack }}"
+          set -e
+          for f in AGENTS.md README.md CLAUDE.md .template-initialized \
+                   .github/workflows/checks.yml docs/decisions; do
+            [ -e "$f" ] || { echo "::error::missing $f"; exit 1; }
+          done
+          for f in CONTRIBUTING.md .github/ISSUE_TEMPLATE templates; do
+            [ -e "$f" ] && { echo "::error::template-only file survived: $f"; exit 1; }
+          done
+          grep -q "Project context — test-${{ matrix.stack }}" AGENTS.md \
+            || { echo "::error::project context section missing"; exit 1; }
+          echo "ok"
+
+  guards:
+    name: safety guard behaviour
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Destructive commands are blocked
+        run: |
+          set +e
+          fail=0
+          block() {
+            ./hooks/guard-destructive-hardware.sh "$1" >/dev/null 2>&1
+            [ $? -eq 2 ] || { echo "::error::not blocked: $1"; fail=1; }
+          }
+          allow() {
+            ./hooks/guard-destructive-hardware.sh "$1" >/dev/null 2>&1
+            [ $? -eq 0 ] || { echo "::error::wrongly blocked: $1"; fail=1; }
+          }
+          block "dd if=core-image.wic of=/dev/sda bs=4M"
+          block "espefuse.py burn_efuse SECURE_BOOT_EN"
+          block "nrfjprog --eraseall"
+          block "fw_setenv bootcmd 'run mmcboot'"
+          block "sfdisk /dev/mmcblk0 < layout.txt"
+          block "rm -rf ~/yocto/sstate-cache"
+          allow "west build -b verdin_imx8mp app"
+          allow "bitbake core-image-minimal"
+          allow "git status"
+          exit $fail
+
+      - name: Secret scan catches credentials
+        run: |
+          set +e
+          mkdir -p /tmp/ss && cd /tmp/ss
+          printf 'CONFIG_WIFI_PASSWORD="hunter2swordfish"\n' > prj.conf
+          printf 'IMAGE_FEATURES += "debug-tweaks"\n' > local.conf
+          "$GITHUB_WORKSPACE/hooks/secret-scan.sh" prj.conf local.conf >/dev/null 2>&1
+          [ $? -ne 0 ] || { echo "::error::secret scan did not fire"; exit 1; }
+          printf 'CONFIG_LOG=y\n' > clean.conf
+          "$GITHUB_WORKSPACE/hooks/secret-scan.sh" clean.conf >/dev/null 2>&1
+          [ $? -eq 0 ] || { echo "::error::false positive on a clean file"; exit 1; }
+          echo ok

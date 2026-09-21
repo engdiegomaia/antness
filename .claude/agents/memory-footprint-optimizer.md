@@ -1,0 +1,1 @@
+../../mcu/agents/memory-footprint-optimizer.md

@@ -1,0 +1,21 @@
+name: Bug
+description: Something in the template is wrong or broken
+labels: ["bug"]
+body:
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      placeholder: "e.g. mcu/skills/zephyr-development/SKILL.md, scripts/init-project.sh"
+    validations: { required: true }
+  - type: textarea
+    id: what
+    attributes:
+      label: What is wrong
+      description: For incorrect skill content, include the correct version and your source.
+    validations: { required: true }
+  - type: input
+    id: harness
+    attributes:
+      label: Agent harness (if relevant)
+      placeholder: "Claude Code 2.x / Codex / Cursor / ..."

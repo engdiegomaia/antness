@@ -1,0 +1,27 @@
+name: Skill request
+description: Request support for an ecosystem, tool or workflow that is not covered
+labels: ["skill", "enhancement"]
+body:
+  - type: dropdown
+    id: track
+    attributes:
+      label: Track
+      options: [MCU, Embedded Linux, Both, Not sure]
+    validations: { required: true }
+  - type: input
+    id: ecosystem
+    attributes:
+      label: Ecosystem or tool
+      placeholder: "e.g. RT-Thread, swupdate, RAUC, Renesas e2 studio"
+    validations: { required: true }
+  - type: textarea
+    id: failures
+    attributes:
+      label: What do agents get wrong here today?
+      description: The most valuable part. Concrete wrong answers, outdated APIs, unsafe suggestions.
+    validations: { required: true }
+  - type: textarea
+    id: knowledge
+    attributes:
+      label: What do you know that should be in the skill?
+      description: Commands that work, failure modes and their causes, traps. Rough notes are fine.

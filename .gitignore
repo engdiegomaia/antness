@@ -1,0 +1,58 @@
+# Build outputs (never commit — see shared/rules/50-git-workflow.md)
+build/
+builds/
+output/
+tmp/
+sstate-cache/
+downloads/
+deploy/
+*.elf
+*.bin
+*.hex
+*.img
+*.wic
+*.wic.gz
+*.dtb
+*.dtbo
+*.map
+*.o
+*.a
+*.ko
+
+# Generated configs (commit the source: defconfig, prj.conf, .ioc)
+.config
+.config.old
+*.tsbuildinfo
+
+# Zephyr / west
+.west/
+zephyr/
+modules/
+bootloader/
+
+# ESP-IDF
+sdkconfig.old
+managed_components/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editors / OS
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+.DS_Store
+
+# Logs and captures
+*.log
+!**/reference/*.log
+boot-*.log
+session-*.log
+
+# Local agent state
+.claude/settings.local.json
+.claude/state/

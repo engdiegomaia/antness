@@ -1,0 +1,31 @@
+{
+  "_comment": "MCP servers useful for embedded work. Copy the entries you want into your harness config: .mcp.json (Claude Code, project scope), ~/.codex/config.toml [mcp_servers] (Codex), .cursor/mcp.json (Cursor). Nothing here is enabled by default — review each before adding.",
+  "mcpServers": {
+    "context7": {
+      "_why": "Up-to-date library/framework docs instead of training data. Useful for Zephyr, ESP-IDF, kernel APIs that move between releases.",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "filesystem": {
+      "_why": "Scoped filesystem access for reference material kept outside the repo: datasheets, schematics exports, BSP release notes.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/hardware-docs"]
+    },
+    "git": {
+      "_why": "Repository history and blame across a multi-repo BSP workspace.",
+      "command": "uvx",
+      "args": ["mcp-server-git", "--repository", "."]
+    },
+    "fetch": {
+      "_why": "Reading vendor documentation, errata sheets and mailing list threads.",
+      "command": "uvx",
+      "args": ["mcp-server-fetch"]
+    },
+    "serial-bridge": {
+      "_why": "OPTIONAL and high-risk: exposes a serial console to the agent. Only enable on a dedicated development board with a known recovery path. Never on a production or customer unit.",
+      "_disabled_by_default": true,
+      "command": "uvx",
+      "args": ["mcp-serial-server", "--port", "/dev/serial/by-id/CHANGE-ME", "--baud", "115200", "--read-only"]
+    }
+  }
+}

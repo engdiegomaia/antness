@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+# Validates an embedded-agentic installation: required files, skill frontmatter,
+# agent frontmatter, adapter freshness, and hook executability.
+#
+#   ./validate.sh [target-dir]      (defaults to the repo root)
+set -uo pipefail
+
+ROOT="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+cd "$ROOT" || exit 1
+
+fail=0
+ok()   { printf '  \033[32mok\033[0m    %s\n' "$1"; }
+bad()  { printf '  \033[31mFAIL\033[0m  %s\n' "$1"; fail=1; }
+warn() { printf '  \033[33mwarn\033[0m  %s\n' "$1"; }
+
+echo "Validating $ROOT"
+echo
+echo "Core files"
+for f in AGENTS.md; do
+  [ -f "$f" ] && ok "$f" || bad "$f missing"
+done
+for d in shared/rules shared/roles; do
+  [ -d "$d" ] && ok "$d/" || warn "$d/ missing"
+done
+
+echo
+echo "Skills"
+shopt -s nullglob
+for s in shared/skills/*/SKILL.md mcu/skills/*/SKILL.md linux-embedded/skills/*/SKILL.md \
+         .agents/*/skills/*/SKILL.md; do
+  dir="$(dirname "$s")"; name="$(basename "$dir")"
+  head -1 "$s" | grep -q '^---$' || { bad "$s: no YAML frontmatter"; continue; }
+  fm_name="$(sed -n '2,10p' "$s" | grep '^name:' | head -1 | cut -d: -f2- | xargs)"
+  grep -q '^description:' "$s" || bad "$s: no description in frontmatter"
+  if [ "$fm_name" != "$name" ]; then
+    bad "$s: frontmatter name '$fm_name' != directory '$name'"
+  else
+    ok "skill $name"
+  fi
+done
+
+echo
+echo "Agents"
+for a in shared/agents/*.md mcu/agents/*.md linux-embedded/agents/*.md .agents/*/agents/*.md; do
+  base="$(basename "$a" .md)"
+  head -1 "$a" | grep -q '^---$' || { bad "$a: no YAML frontmatter"; continue; }
+  fm_name="$(sed -n '2,12p' "$a" | grep '^name:' | head -1 | cut -d: -f2- | xargs)"
+  grep -q '^description:' "$a" || bad "$a: no description"
+  grep -q '^tools:' "$a" || warn "$a: no tools list (harness will use defaults)"
+  if [ "$fm_name" != "$base" ]; then
+    bad "$a: frontmatter name '$fm_name' != filename '$base'"
+  else
+    ok "agent $base"
+  fi
+done
+
+echo
+echo "Adapters"
+if [ -f AGENTS.md ]; then
+  for a in CLAUDE.md GEMINI.md .github/copilot-instructions.md; do
+    if [ -e "$a" ]; then
+      if [ "$a" -ot AGENTS.md ]; then
+        warn "$a is older than AGENTS.md — run scripts/sync-agent-configs.sh"
+      else
+        ok "$a"
+      fi
+    else
+      warn "$a missing"
+    fi
+  done
+fi
+
+echo
+echo "Broken symlinks"
+broken="$(find . -type l ! -exec test -e {} \; -print 2>/dev/null)"
+if [ -n "$broken" ]; then
+  echo "$broken" | while read -r l; do bad "dangling symlink: $l"; done
+  fail=1
+else
+  ok "none"
+fi
+
+echo
+echo "Hooks"
+for h in hooks/*.sh hooks/pre-commit .agents/hooks/*.sh; do
+  [ -e "$h" ] || continue
+  [ -x "$h" ] && ok "$(basename "$h") executable" || bad "$h not executable"
+  bash -n "$h" 2>/dev/null || bad "$h has a syntax error"
+done
+
+echo
+echo "Project context"
+if grep -q "Target hardware:\s*$" AGENTS.md 2>/dev/null; then
+  warn "AGENTS.md project-specific section is not filled in — agents will lack hardware context"
+fi
+
+echo
+if [ $fail -eq 0 ]; then
+  echo "PASS"
+else
+  echo "FAIL — fix the items above"
+fi
+exit $fail
