@@ -1,0 +1,52 @@
+name: template bootstrap
+
+# Fires once, on the first push to a repository created from this template.
+# Opens an issue with the setup checklist, then removes itself.
+#
+# TEMPLATE_REPO below must stay equal to this template's own full name. It is the
+# guard that keeps this workflow from firing on the template repository itself —
+# repository.is_template is NOT reliable here, because the flag is typically enabled
+# after the first push, at which point this workflow has already run.
+on:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: write
+  issues: write
+
+env:
+  TEMPLATE_REPO: micron-iot/embedded-agentic
+
+jobs:
+  bootstrap:
+    if: ${{ github.repository != 'micron-iot/embedded-agentic' && github.run_number == 1 }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Skip if already initialized
+        id: check
+        run: |
+          if [ -f .template-initialized ] \
+             || [ ! -f .github/TEMPLATE_SETUP.md ] \
+             || [ "$GITHUB_REPOSITORY" = "$TEMPLATE_REPO" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open the setup issue
+        if: steps.check.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue create --title "Set up this project" --body-file .github/TEMPLATE_SETUP.md
+
+      - name: Remove the bootstrap files
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git rm -q .github/workflows/template-bootstrap.yml .github/TEMPLATE_SETUP.md
+          git commit -m "chore: remove template bootstrap"
+          git push
