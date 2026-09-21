@@ -1,5 +1,8 @@
 # embedded-agentic
 
+[![template](https://img.shields.io/badge/GitHub-use%20this%20template-2ea44f?logo=github)](https://github.com/micron-iot/embedded-agentic/generate)
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 **A GitHub template for starting embedded projects that AI coding agents can work in
 safely.** Two tracks — **MCU** and **embedded Linux** — with rules, roles, skills, review
 agents, safety hooks and configuration for every major agent harness.
@@ -11,12 +14,19 @@ Continue, and any agent that reads `AGENTS.md`.
 
 ## Start a project
 
-**Click "Use this template" → "Create a new repository"**, then:
+**Click ["Use this template" → "Create a new repository"](https://github.com/micron-iot/embedded-agentic/generate)**, then:
 
 ```bash
 git clone https://github.com/<you>/<your-project>.git
 cd <your-project>
 ./scripts/init-project.sh
+```
+
+Or entirely from the CLI:
+
+```bash
+gh repo create my-project --template micron-iot/embedded-agentic --private --clone
+cd my-project && ./scripts/init-project.sh
 ```
 
 The script asks for your project name, stack and board, then:
@@ -55,7 +65,8 @@ quality than everything else in this repository.
 ### Adding it to an existing project
 
 ```bash
-./install.sh /path/to/existing-project --track linux
+git clone https://github.com/micron-iot/embedded-agentic ~/tools/embedded-agentic
+~/tools/embedded-agentic/install.sh /path/to/existing-project --track linux
 ```
 
 Installs the environment alongside your code instead of scaffolding a new repository.

@@ -6,7 +6,7 @@
 set -euo pipefail
 
 REMOTE="upstream"; REF="main"; DRY=0
-UPSTREAM_URL="https://github.com/toradex/embedded-agentic.git"
+UPSTREAM_URL="https://github.com/micron-iot/embedded-agentic.git"
 
 while [ $# -gt 0 ]; do
   case "$1" in

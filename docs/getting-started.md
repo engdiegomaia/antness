@@ -13,7 +13,7 @@ On GitHub: **Use this template → Create a new repository**.
 
 Or from the CLI:
 ```bash
-gh repo create my-project --template toradex/embedded-agentic --private --clone
+gh repo create my-project --template micron-iot/embedded-agentic --private --clone
 cd my-project
 ```
 
@@ -82,7 +82,7 @@ git push
 ## B. Add to an existing project
 
 ```bash
-git clone https://github.com/toradex/embedded-agentic ~/tools/embedded-agentic
+git clone https://github.com/micron-iot/embedded-agentic ~/tools/embedded-agentic
 ~/tools/embedded-agentic/install.sh ~/work/my-bsp --track linux
 ```
 

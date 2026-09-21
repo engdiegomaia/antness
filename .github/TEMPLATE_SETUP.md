@@ -1,5 +1,5 @@
 This repository was created from the
-[embedded-agentic](https://github.com/toradex/embedded-agentic) template.
+[embedded-agentic](https://github.com/micron-iot/embedded-agentic) template.
 
 ## 1. Scaffold
 
@@ -31,7 +31,7 @@ missing hardware context, not because they reason badly.
 ## 3. Track upstream
 
 ```bash
-git remote add upstream https://github.com/toradex/embedded-agentic.git
+git remote add upstream https://github.com/micron-iot/embedded-agentic.git
 ./scripts/update-from-upstream.sh     # later, to pull environment improvements
 ```
 

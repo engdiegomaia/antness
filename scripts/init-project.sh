@@ -256,7 +256,7 @@ cat > README.md <<EOF
 
 <!-- One paragraph: what this device does and who it is for. -->
 
-Started from the [embedded-agentic](https://github.com/toradex/embedded-agentic) template.
+Started from the [embedded-agentic](https://github.com/micron-iot/embedded-agentic) template.
 
 ## Hardware
 
@@ -437,7 +437,7 @@ say "     ${c_d}Part number, memory map, recovery path, real build command.${c_0
 say "     ${c_d}This does more for agent output quality than anything else.${c_0}"
 say "  2. Read docs/getting-started.md"
 say "  3. Track upstream improvements:"
-say "     ${c_d}git remote add upstream https://github.com/toradex/embedded-agentic.git${c_0}"
+say "     ${c_d}git remote add upstream https://github.com/micron-iot/embedded-agentic.git${c_0}"
 say "  4. Commit:"
 say "     ${c_d}git add -A && git commit -m 'chore: initialize $NAME from embedded-agentic'${c_0}"
 say
