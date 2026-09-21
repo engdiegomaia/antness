@@ -95,6 +95,43 @@ Skills are `SKILL.md` files with YAML frontmatter under `<track>/skills/<name>/`
 They are loaded on demand — read the one matching the task before acting, not after.
 `docs/skill-index.md` lists all of them with trigger conditions.
 
+## 6a. Executable tools (MCU track)
+
+`mcu/tools/` holds tools that **act on hardware** rather than describe it: compile,
+flash, read the console, and chain the three. Run them; do not reimplement what they do
+with ad-hoc shell commands.
+
+```bash
+python mcu/tools/flow/scripts/flow_cli.py diagnose    # what is missing before the loop closes
+python mcu/tools/build/scripts/build_cli.py build
+python mcu/tools/probe/scripts/probe_cli.py flash     # high risk — returns a token first
+python mcu/tools/serial/scripts/serial_cli.py wait-for --pattern "Booting"
+```
+
+Each prints one JSON object, declares a risk level per action, and reports
+`validated_on` as `host`, `simulator` or `hardware`. See `mcu/tools/README.md`.
+
+**A high-risk action returns `status: "confirmation_required"` with a token.** Show the
+user the target, what is at stake and the recovery path, then re-run with
+`--confirm <token>`. The token is bound to that specific device — an approval for one
+board never carries to another. Chaining through `flow` does not bypass this.
+
+## 6b. Machine-readable project context
+
+```
+.embedded-agentic/project.json   versioned   board, chip, interface, recovery path, budgets
+.embedded-agentic/local.json     gitignored  tool paths, probe serial, operation_mode
+.embedded-agentic/state.json     gitignored  last successful run — a fallback, never truth
+```
+
+`project.json` is the same hardware context described in this file's project section, in
+a form the tools can read and write back to. When a tool confirms a value it persists it,
+so the context fills itself in through use instead of depending on someone remembering.
+
+Precedence: `CLI > project > local > state > PATH > default`. Tool paths are never read
+from `project.json`; project facts are never read from `local.json`. A value in the wrong
+file breaks a colleague's clone — `flow diagnose` reports these.
+
 ## 7. Workflow
 
 ```

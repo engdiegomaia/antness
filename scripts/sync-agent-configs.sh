@@ -37,8 +37,9 @@ log "CLAUDE.md" "pointer written"
 rm -rf .claude/skills .claude/agents
 mkdir -p .claude/skills .claude/agents
 
-for d in shared/skills/*/ mcu/skills/*/ linux-embedded/skills/*/; do
+for d in shared/skills/*/ mcu/skills/*/ linux-embedded/skills/*/ mcu/tools/*/; do
   [ -d "$d" ] || continue
+  [ -f "${d}SKILL.md" ] || continue
   name="$(basename "$d")"
   ln -sfn "../../$d" ".claude/skills/$name"
 done

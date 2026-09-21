@@ -1,0 +1,55 @@
+{
+  "_comment": [
+    "Project context, versioned and shared with the team. Both agents and the tools in",
+    "mcu/tools/ read this file. Anything here must be true for every clone of the",
+    "repository: board, chip, interface, recovery path, build parameters.",
+    "",
+    "Machine-specific values (tool paths, probe serial numbers, serial ports,",
+    "operation_mode) go in local.json, which is gitignored. `flow diagnose` reports",
+    "values sitting in the wrong file."
+  ],
+
+  "hardware": {
+    "board": "",
+    "board_revision": "",
+    "soc": "",
+    "silicon_revision": "",
+    "errata_document": "",
+    "flash_bytes": null,
+    "ram_bytes": null,
+    "recovery_path": ""
+  },
+
+  "build": {
+    "backend": "",
+    "board": "",
+    "app_dir": ".",
+    "preset": "",
+    "build_dir": "build",
+    "extra_args": []
+  },
+
+  "probe": {
+    "backend": "",
+    "device": "",
+    "interface": "SWD",
+    "speed": "4000",
+    "recovery_path": ""
+  },
+
+  "serial": {
+    "baud": 115200,
+    "boot_pattern": ""
+  },
+
+  "budgets": {
+    "flash_bytes": null,
+    "ram_bytes": null,
+    "boot_time_ms": null
+  },
+
+  "compliance": {
+    "regulated_scope": "none",
+    "notes": ""
+  }
+}

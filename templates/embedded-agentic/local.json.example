@@ -1,0 +1,37 @@
+{
+  "_comment": [
+    "This machine only. Copy to local.json — which is gitignored — and edit.",
+    "Never commit local.json: it describes one bench, and committing it breaks",
+    "everyone else's clone.",
+    "",
+    "operation_mode decides how much is gated before a hardware action runs:",
+    "  1  development board on your desk, recovery path known and tested",
+    "  2  default — high-risk actions require explicit confirmation",
+    "  3  customer or production unit — medium-risk actions require confirmation too",
+    "Irreversible actions (fuses, secure boot) are never auto-approved at any mode."
+  ],
+
+  "operation_mode": 2,
+
+  "build": {
+    "west_exe": "",
+    "idf_exe": "",
+    "cmake_exe": "",
+    "make_exe": "",
+    "size_exe": ""
+  },
+
+  "probe": {
+    "backend": "",
+    "jlink_exe": "",
+    "openocd_exe": "",
+    "probe_rs_exe": "",
+    "pyocd_exe": "",
+    "serial_no": "",
+    "operation_mode": 2
+  },
+
+  "serial": {
+    "port": ""
+  }
+}

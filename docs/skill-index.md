@@ -25,6 +25,20 @@ Every skill, with the condition that should make an agent load it. Skills are lo
 | `mcu-testing` | Writing or fixing firmware tests; setting up CI or a board farm |
 | `mcu-debug-trace` | Hard fault, hang, corruption, intermittent failure, latency measurement |
 
+## MCU executable tools (`mcu/tools/`)
+
+These are not reference skills — they are CLIs with a `SKILL.md` describing how to drive
+them. Prefer them over raw shell for anything that touches a board.
+
+| Tool | Load when |
+|------|-----------|
+| `build` | Compiling firmware, checking size, locating artifacts |
+| `probe` | Talking to a debug probe: enumerate, inspect, halt, reset, flash, erase |
+| `serial` | Reading the console, waiting for a boot pattern, sending a command |
+| `flow` | You want the whole loop — diagnose the setup, build, flash, verify, observe |
+
+Start with `flow diagnose`; it reports exactly which piece of the loop is missing.
+
 ## Embedded Linux (`linux-embedded/skills/`)
 
 | Skill | Load when |

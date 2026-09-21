@@ -103,9 +103,15 @@ shared/
   skills/                  cross-compilation, serial console, lab safety, traceability
   agents/                  embedded-security-reviewer, embedded-architect
 mcu/                       8 skills, 5 review agents, 3 rule files
+  tools/                   build, probe, serial, flow — executable CLIs agents call
+                           instead of ad-hoc shell
 linux-embedded/            9 skills, 5 review agents, 3 rule files
 hooks/                     destructive-command guard, quality gate, secret scan, pre-commit
 mcp/                       MCP server catalogue for embedded work
+shared/runtime/            embedded_agentic — config resolution, risk gating,
+                           structured results (stdlib only, Python 3.9+)
+.embedded-agentic/         machine-readable project context (project.json versioned,
+                           local.json gitignored)
 scripts/                   init-project, sync-agent-configs, validate, update-from-upstream
 docs/                      getting started, skill index, multi-harness guide
 .devcontainer/             host tooling (no SDKs — those are pinned per project)
@@ -118,6 +124,20 @@ inference (TFLite Micro, CMSIS-NN, eIQ, ESP-DL, Ethos-U).
 
 Review agents: `firmware-reviewer`, `rtos-concurrency-auditor`, `mcu-build-resolver`,
 `memory-footprint-optimizer`, `hal-driver-writer`
+
+Executable tools under `mcu/tools/` — agents call these rather than improvising shell,
+so that every build, flash and capture is risk-gated and returns structured JSON:
+
+| Tool | Does |
+|------|------|
+| `build` | detect backend, build, clean, size, artifacts — west / idf / cmake / make / nuttx |
+| `probe` | list, info, regs, read-mem, rtt, halt, go, reset, flash, write-mem, erase — J-Link / OpenOCD / probe-rs / pyOCD |
+| `serial` | list, capture, wait-for, send |
+| `flow` | plan, diagnose, build-flash, verify, observe — the closed loop over the three above |
+
+Anything that changes the device (`reset`, `flash`, `write-mem`, `erase`) requires a
+confirmation token bound to backend + device + probe serial, so an approval for one board
+on the bench cannot be replayed against another.
 
 ### Embedded Linux track
 

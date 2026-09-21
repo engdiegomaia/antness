@@ -107,6 +107,15 @@ stack_test() {
     android)   echo 'atest <TestModule>' ;;
   esac
 }
+stack_build_backend() {
+  case "$1" in
+    zephyr) echo west ;;
+    esp-idf) echo idf ;;
+    freertos|stm32) echo cmake ;;
+    nuttx) echo nuttx ;;
+    *) echo "" ;;
+  esac
+}
 STACKS="zephyr esp-idf freertos stm32 nuttx yocto torizon buildroot kernel android"
 
 # ----------------------------------------------------------------- collect input
@@ -311,6 +320,19 @@ docs/decisions/      architecture decision records
 EOF
 ok "README.md written"
 
+# ------------------------------------------------- machine-readable context
+mkdir -p .embedded-agentic
+if [ -f templates/embedded-agentic/project.json ]; then
+  BUILD_BACKEND="$(stack_build_backend "$STACK")"
+  python3 "$SRC/scripts/lib/gen_project_config.py" \
+      --name "$NAME" --board "$BOARD" --stack "$STACK" \
+      --build-backend "$BUILD_BACKEND" \
+      --template templates/embedded-agentic/project.json \
+      --out .embedded-agentic/project.json
+  cp templates/embedded-agentic/local.json.example .embedded-agentic/local.json.example
+  ok ".embedded-agentic/ created (project.json versioned, local.json.example to copy)"
+fi
+
 # ------------------------------------------------------------------ scaffolding
 mkdir -p docs/decisions
 cat > docs/decisions/0001-record-architecture-decisions.md <<'EOF'
@@ -342,8 +364,9 @@ rm -rf .github/ISSUE_TEMPLATE
 rm -f .github/PULL_REQUEST_TEMPLATE.md CONTRIBUTING.md
 rm -f .github/workflows/template-validate.yml .github/workflows/template-bootstrap.yml .github/TEMPLATE_SETUP.md
 rm -f install.sh
-rm -f templates/mcu-project/AGENTS.md templates/linux-project/AGENTS.md
-rmdir templates/mcu-project templates/linux-project templates 2>/dev/null || true
+rm -rf templates/mcu-project templates/linux-project templates/embedded-agentic
+rm -rf scripts/lib
+rmdir templates 2>/dev/null || true
 ok "template-only files removed"
 
 # ------------------------------------------------------------------- project CI
@@ -432,9 +455,11 @@ say
 say "${c_b}Done.${c_0}"
 say
 say "Next:"
-say "  1. ${c_b}Fill in the 'Project context' section of AGENTS.md${c_0}"
+say "  1. ${c_b}Fill in AGENTS.md and .embedded-agentic/project.json${c_0}"
 say "     ${c_d}Part number, memory map, recovery path, real build command.${c_0}"
 say "     ${c_d}This does more for agent output quality than anything else.${c_0}"
+say "     ${c_d}cp .embedded-agentic/local.json.example .embedded-agentic/local.json${c_0}"
+say "     ${c_d}then: python mcu/tools/flow/scripts/flow_cli.py diagnose${c_0}"
 say "  2. Read docs/getting-started.md"
 say "  3. Track upstream improvements:"
 say "     ${c_d}git remote add upstream https://github.com/micron-iot/embedded-agentic.git${c_0}"

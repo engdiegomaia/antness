@@ -20,6 +20,21 @@ ESP-IDF, STM32 HAL/LL, NuttX. Includes on-MCU inference (TFLite Micro, CMSIS-NN,
 | Test work | `skills/mcu-testing` |
 | Fault/hang/hardfault debugging | `skills/mcu-debug-trace` |
 
+## Executable tools — prefer them over ad-hoc shell
+
+| Task | Tool |
+|------|------|
+| Compile, clean, footprint | `python mcu/tools/build/scripts/build_cli.py` |
+| Flash, reset, read memory/registers | `python mcu/tools/probe/scripts/probe_cli.py` |
+| Console capture, send, wait for a banner | `python mcu/tools/serial/scripts/serial_cli.py` |
+| The whole cycle, or "why won't it work" | `python mcu/tools/flow/scripts/flow_cli.py` |
+
+Start an unfamiliar workspace with `flow diagnose`. It reports the detected build backend,
+available probes, visible serial devices and what is missing — in one call, read-only.
+
+These tools enforce the risk gate described in `shared/rules/10-hardware-safety.md` at the
+point of execution. Running `openocd` or `west flash` directly bypasses it. Do not.
+
 ## Before you touch firmware
 
 State these, from the repo or by asking:

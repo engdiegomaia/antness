@@ -62,15 +62,60 @@ jobs:
           cd "/tmp/proj-${{ matrix.stack }}"
           set -e
           for f in AGENTS.md README.md CLAUDE.md .template-initialized \
-                   .github/workflows/checks.yml docs/decisions; do
+                   .github/workflows/checks.yml docs/decisions \
+                   .embedded-agentic/project.json .embedded-agentic/local.json.example; do
             [ -e "$f" ] || { echo "::error::missing $f"; exit 1; }
           done
-          for f in CONTRIBUTING.md .github/ISSUE_TEMPLATE templates; do
+          python3 -c "import json,sys; json.load(open('.embedded-agentic/project.json'))" \
+            || { echo "::error::project.json is not valid JSON"; exit 1; }
+          for f in CONTRIBUTING.md .github/ISSUE_TEMPLATE templates scripts/lib; do
             [ -e "$f" ] && { echo "::error::template-only file survived: $f"; exit 1; }
           done
           grep -q "Project context — test-${{ matrix.stack }}" AGENTS.md \
             || { echo "::error::project context section missing"; exit 1; }
           echo "ok"
+
+  tools:
+    name: executable tools closed loop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Runtime unit tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Every tool answers --help
+        run: |
+          set -e
+          for cli in mcu/tools/*/scripts/*_cli.py; do
+            python3 "$cli" --help >/dev/null || { echo "::error::$cli --help failed"; exit 1; }
+          done
+
+      - name: Build backend detection and risk gating on a fake project
+        run: |
+          set -e
+          ./scripts/init-project.sh --non-interactive --force \
+            --name loop-test --stack freertos --board "CI board" --out /tmp/loop
+          cd /tmp/loop
+          mkdir -p build && echo elf > build/app.elf
+          python3 mcu/tools/build/scripts/build_cli.py detect | tee /tmp/detect.json
+          python3 -c "import json; d=json.load(open('/tmp/detect.json')); assert d['status']=='ok', d"
+          # A flash must stop for confirmation, not proceed. Exit code 3 is the contract.
+          set +e
+          python3 mcu/tools/probe/scripts/probe_cli.py flash --backend openocd \
+            --device STM32F407VG --file build/app.elf > /tmp/flash.json 2>&1
+          code=$?
+          set -e
+          [ $code -eq 3 ] || { echo "::error::flash did not require confirmation (exit $code)"; cat /tmp/flash.json; exit 1; }
+          echo ok
+
+      - name: Config layer hygiene is enforced
+        run: |
+          set -e
+          mkdir -p /tmp/lintws/.embedded-agentic
+          echo '{"probe": {"jlink_exe": "/opt/SEGGER/JLinkExe"}}' \
+            > /tmp/lintws/.embedded-agentic/project.json
+          PYTHONPATH=shared/runtime python3 -c "import pathlib; from embedded_agentic import config; f=config.lint_layers(pathlib.Path('/tmp/lintws')); assert f, 'lint missed an absolute tool path in project.json'; print(chr(10).join(f))"
 
   guards:
     name: safety guard behaviour

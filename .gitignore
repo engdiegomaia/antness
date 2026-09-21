@@ -1,5 +1,8 @@
 # Build outputs (never commit — see shared/rules/50-git-workflow.md)
 build/
+# ...except the build tool itself, which lives at mcu/tools/build/ and is source.
+!mcu/tools/build/
+!mcu/tools/build/**
 builds/
 output/
 tmp/
@@ -56,3 +59,8 @@ session-*.log
 # Local agent state
 .claude/settings.local.json
 .claude/state/
+
+# Machine-local tool configuration and run state.
+# project.json IS versioned — it is the team's shared hardware context.
+.embedded-agentic/local.json
+.embedded-agentic/state.json
