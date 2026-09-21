@@ -359,7 +359,7 @@ jobs:
   agent-environment:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Validate the agent environment
         run: ./scripts/validate.sh
       - name: Adapters are in sync with AGENTS.md
@@ -373,7 +373,7 @@ jobs:
   secrets:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with: { fetch-depth: 0 }
       - name: Scan changed files for credentials
         run: |
@@ -384,7 +384,7 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with: { fetch-depth: 0 }
       - run: sudo apt-get update && sudo apt-get install -y cppcheck device-tree-compiler shellcheck
       - name: Quality gate on changed files
@@ -398,7 +398,7 @@ jobs:
   #   runs-on: ubuntu-latest
   #   container: <the pinned build container for this project>
   #   steps:
-  #     - uses: actions/checkout@v4
+  #     - uses: actions/checkout@v5
   #     - run: <the build command from AGENTS.md>
 EOF
 ok ".github/workflows/checks.yml written"

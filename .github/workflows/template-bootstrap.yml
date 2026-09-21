@@ -23,7 +23,7 @@ jobs:
     if: ${{ github.repository != 'micron-iot/embedded-agentic' && github.run_number == 1 }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Skip if already initialized
         id: check

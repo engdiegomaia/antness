@@ -10,7 +10,7 @@ jobs:
     name: validate environment
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Validate skills, agents, adapters and hooks
         run: ./scripts/validate.sh
@@ -46,7 +46,7 @@ jobs:
       matrix:
         stack: [zephyr, esp-idf, freertos, stm32, nuttx, yocto, torizon, buildroot, kernel, android]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Scaffold
         run: |
@@ -76,7 +76,7 @@ jobs:
     name: safety guard behaviour
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Destructive commands are blocked
         run: |
