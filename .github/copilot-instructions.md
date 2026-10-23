@@ -2,9 +2,8 @@
 
 # AGENTS.md — Embedded Agentic Development Environment
 
-> Canonical, vendor-neutral instruction file. Every supported harness (Claude Code,
-> OpenAI Codex, Cursor, Gemini CLI, DeepSeek, Copilot, Continue) reads this file
-> directly or through a thin adapter in `adapters/`. **Edit this file, never the adapters.**
+> Canonical, vendor-neutral instruction file. Edit this file and the scoped track files;
+> generated harness adapters are compatibility outputs, never sources of truth.
 
 ## 1. What this repository is
 
@@ -159,7 +158,7 @@ Always state in the body which hardware the change was validated on, or that it 
 
 | Harness | Entry point | Mechanism |
 |---------|-------------|-----------|
-| Claude Code | `CLAUDE.md` | Pointer file -> this file; skills/agents auto-discovered |
+| Claude Code | `AGENTS.md` (v2.1.277+) | Native fallback; no `CLAUDE.md` may exist on the repo path; skills/agents auto-discovered |
 | OpenAI Codex | `AGENTS.md` | Native |
 | Cursor | `.cursor/rules/*.mdc` | Generated from this file |
 | Gemini CLI | `GEMINI.md` | Pointer file |
@@ -167,5 +166,6 @@ Always state in the body which hardware the change was validated on, or that it 
 | GitHub Copilot | `.github/copilot-instructions.md` | Generated |
 | Continue | `.continue/rules/` | Generated |
 
-Regenerate all adapters with `./scripts/sync-agent-configs.sh` after editing this file.
-Adapters are generated artifacts — changes to them are lost on the next sync.
+Regenerate native harness adapters with `./scripts/sync-agent-configs.sh` after editing
+this file. `CLAUDE.md` is intentionally absent so Claude Code loads `AGENTS.md` directly.
+Other harness-specific files are generated artifacts — changes to them are lost on the next sync.

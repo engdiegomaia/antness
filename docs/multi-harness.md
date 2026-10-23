@@ -7,32 +7,37 @@ One canonical file, thin generated adapters.
 ```
 AGENTS.md  (canonical, hand-written)
     |
-    +-- CLAUDE.md                        pointer (@AGENTS.md)
     +-- GEMINI.md                        pointer
     +-- .cursor/rules/*.mdc              generated, with Cursor frontmatter
     +-- .github/copilot-instructions.md  generated copy
     +-- .continue/rules/*.md             generated
     +-- .codex/config.toml               execution policy only (Codex reads AGENTS.md natively)
-    +-- .agent.md, .rules.md             symlinks for generic AGENTS.md readers
 ```
 
-Regenerate with `scripts/sync-agent-configs.sh`. Never edit an adapter — the next sync
-overwrites it.
+Claude Code 2.1.277+ reads `AGENTS.md` directly when no `CLAUDE.md` is present in the
+working directory or its parents. This repository intentionally has no `CLAUDE.md`.
+Regenerate native adapters with `scripts/sync-agent-configs.sh`; never edit generated
+adapters by hand.
 
 ## What each harness actually supports
 
 | Capability | Claude Code | Codex | Cursor | Gemini CLI | DeepSeek/generic | Copilot |
 |------------|-------------|-------|--------|------------|------------------|---------|
-| Instruction file | `CLAUDE.md` | `AGENTS.md` | `.cursor/rules` | `GEMINI.md` | `AGENTS.md` | `.github/copilot-instructions.md` |
+| Instruction file | `AGENTS.md`* | `AGENTS.md` | `.cursor/rules` | `GEMINI.md` | `AGENTS.md` | `.github/copilot-instructions.md` |
 | Subagents | native | no | no | no | no | no |
 | On-demand skills | native | no | partial (rule globs) | no | no | no |
 | Tool-call interception (hooks) | native | limited | no | no | no | no |
 | MCP | yes | yes | yes | yes | varies | limited |
 
+\* Claude Code reads `AGENTS.md` natively from v2.1.277. Use v2.1.281+ for sessions that
+previously required `CLAUDE.md` (including some managed environments). If a managed setting
+forces Claude-specific files, configure that environment rather than adding a second
+committed instruction source to this template.
+
 ## Designing for the lowest common denominator
 
-Because only Claude Code has subagents, skills and hooks, this environment is built so
-that **nothing critical depends on them**:
+Harness capabilities vary by product and version, so **nothing critical depends on a
+proprietary discovery or delegation feature**:
 
 - **Skills** are plain markdown with YAML frontmatter under predictable paths. A harness
   without skill support still reads them when pointed at the file — the root `AGENTS.md`
@@ -72,8 +77,7 @@ Reads `GEMINI.md`. The `@AGENTS.md` import is supported; if your version does no
 support imports, run the sync script with the content inlined instead of the pointer.
 
 ### DeepSeek, Qwen, Cline, Aider, Windsurf and other generic agents
-Point them at `AGENTS.md`. The `.agent.md` and `.rules.md` symlinks cover harnesses
-that look for those names. For Aider: `aider --read AGENTS.md`.
+Point them at `AGENTS.md`. For Aider: `aider --read AGENTS.md`.
 
 ### GitHub Copilot
 `.github/copilot-instructions.md` is applied automatically in VS Code and on

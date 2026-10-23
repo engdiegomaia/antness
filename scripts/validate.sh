@@ -57,7 +57,12 @@ done
 echo
 echo "Adapters"
 if [ -f AGENTS.md ]; then
-  for a in CLAUDE.md GEMINI.md .github/copilot-instructions.md; do
+  if [ -e CLAUDE.md ] || [ -e .claude/CLAUDE.md ] || [ -e CLAUDE.local.md ]; then
+    bad "Claude instruction alias masks AGENTS.md; remove it or configure Claude to read both"
+  else
+    ok "Claude Code can read AGENTS.md directly"
+  fi
+  for a in GEMINI.md .github/copilot-instructions.md; do
     if [ -e "$a" ]; then
       if [ "$a" -ot AGENTS.md ]; then
         warn "$a is older than AGENTS.md — run scripts/sync-agent-configs.sh"

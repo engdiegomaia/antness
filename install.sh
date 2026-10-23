@@ -106,9 +106,8 @@ fi
 
 # --- harness adapters ------------------------------------------------------
 ( cd "$TARGET" && "$SRC/scripts/sync-agent-configs.sh" >/dev/null 2>&1 ) || {
-  # The sync script is repo-relative; for installed projects generate the
-  # minimal pointers directly.
-  printf '@AGENTS.md\n' > "$TARGET/CLAUDE.md"
+  # The sync script is repo-relative; for installed projects create the
+  # native Gemini and Copilot instruction files directly.
   printf '@AGENTS.md\n' > "$TARGET/GEMINI.md"
   mkdir -p "$TARGET/.github"
   cp "$TARGET/AGENTS.md" "$TARGET/.github/copilot-instructions.md"

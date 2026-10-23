@@ -286,9 +286,9 @@ $(stack_test "$STACK")
 
 ## Working with AI agents in this repository
 
-\`AGENTS.md\` is the canonical instruction file and is read by Claude Code, Codex,
-Cursor, Gemini, Copilot, Continue and any agent that supports the \`AGENTS.md\`
-convention. **Keep its project-context section current** — it is what stops an agent
+\`AGENTS.md\` is the canonical instruction file. Claude Code 2.1.277+, Codex and other
+native readers load it directly; generated harness adapters serve tools that need their
+own entrypoint. **Keep its project-context section current** — it is what stops an agent
 from producing confident, wrong answers about this hardware.
 
 Available to agents in this repository:

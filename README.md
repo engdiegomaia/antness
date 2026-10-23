@@ -7,8 +7,9 @@
 safely.** Two tracks — **MCU** and **embedded Linux** — with rules, roles, skills, review
 agents, safety hooks and configuration for every major agent harness.
 
-Works with Claude Code, OpenAI Codex, Cursor, Gemini CLI, DeepSeek, GitHub Copilot,
-Continue, and any agent that reads `AGENTS.md`.
+Uses `AGENTS.md` as the canonical instruction file for Claude Code 2.1.277+, OpenAI Codex,
+and other native readers. Generated adapters support Cursor, Gemini CLI, GitHub Copilot,
+and Continue without maintaining separate sources of truth.
 
 ---
 
@@ -152,15 +153,15 @@ Full list with load conditions: [`docs/skill-index.md`](docs/skill-index.md)
 
 ## Multi-harness by design
 
-`AGENTS.md` is canonical and hand-written. Everything else is generated:
+`AGENTS.md` is canonical and hand-written. Harness-specific adapters are generated:
 
 ```bash
 ./scripts/sync-agent-configs.sh
 ```
 
-→ `CLAUDE.md` + `.claude/{skills,agents}/`, `.codex/config.toml`, `.cursor/rules/*.mdc`,
-`GEMINI.md`, `.github/copilot-instructions.md`, `.continue/rules/`, and `.agent.md` /
-`.rules.md` aliases for generic readers.
+→ `.claude/{skills,agents}/`, `.codex/config.toml`, `.cursor/rules/*.mdc`, `GEMINI.md`,
+`.github/copilot-instructions.md`, and `.continue/rules/`. No root `CLAUDE.md` is generated:
+Claude Code 2.1.277+ reads `AGENTS.md` natively when no `CLAUDE.md` masks it.
 
 Only some harnesses support subagents, on-demand skills and tool-call hooks, so
 **nothing critical depends on them**: skills and agents are plain markdown any agent can

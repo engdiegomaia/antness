@@ -61,11 +61,12 @@ jobs:
         run: |
           cd "/tmp/proj-${{ matrix.stack }}"
           set -e
-          for f in AGENTS.md README.md CLAUDE.md .template-initialized \
+          for f in AGENTS.md README.md .template-initialized \
                    .github/workflows/checks.yml docs/decisions \
                    .embedded-agentic/project.json .embedded-agentic/local.json.example; do
             [ -e "$f" ] || { echo "::error::missing $f"; exit 1; }
           done
+          [ ! -e CLAUDE.md ] || { echo "::error::remove CLAUDE.md so Claude Code reads AGENTS.md directly"; exit 1; }
           python3 -c "import json,sys; json.load(open('.embedded-agentic/project.json'))" \
             || { echo "::error::project.json is not valid JSON"; exit 1; }
           for f in CONTRIBUTING.md .github/ISSUE_TEMPLATE templates scripts/lib; do

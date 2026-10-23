@@ -18,8 +18,10 @@ it makes that starting point better.
 
 - Project-specific content. This is the template; your board's quirks go in your
   project's `AGENTS.md`.
-- Generated files. `CLAUDE.md`, `.cursor/rules/`, `.github/copilot-instructions.md`,
-  `.continue/`, `.codex/` are produced by `scripts/sync-agent-configs.sh`.
+- Generated files. `.cursor/rules/`, `.github/copilot-instructions.md`, `.continue/`,
+  `.codex/`, `GEMINI.md`, and `.claude/{skills,agents}/` are produced by
+  `scripts/sync-agent-configs.sh`. Do not add a root `CLAUDE.md`; it masks native loading
+  of `AGENTS.md` in Claude Code.
 - Generic coding advice an agent already knows. Content earns its place by being
   specific: a command that works, a failure mode with its cause, a value with its
   datasheet citation.

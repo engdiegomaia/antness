@@ -14,25 +14,9 @@ log() { printf '  %-28s %s\n' "$1" "$2"; }
 
 echo "Syncing agent harness adapters from AGENTS.md"
 
-# ---------------------------------------------------------------- Claude Code
-# Pointer file + skill/agent discovery directories.
-cat > CLAUDE.md <<EOF
-$HEADER_NOTE
-
-@AGENTS.md
-
-# Claude Code specifics
-
-Skills and subagents are discovered from \`.claude/skills/\` and \`.claude/agents/\`,
-which are symlinks into \`shared/\`, \`mcu/\` and \`linux-embedded/\`. The canonical
-source is always the track directory, never the symlink.
-
-- Read \`AGENTS.md\` section 2 and pick the track before any other action.
-- Invoke the review subagents proactively as listed in section 5 — no prompt needed.
-- Hardware-destructive commands (section 3, rule 1) always require explicit confirmation,
-  regardless of the permission mode in effect.
-EOF
-log "CLAUDE.md" "pointer written"
+# Claude Code v2.1.277+ reads AGENTS.md natively when no CLAUDE.md is present.
+# Never create or delete a user's CLAUDE.md here; validate.sh reports a conflict.
+log "Claude Code" "AGENTS.md is canonical; no CLAUDE.md generated"
 
 rm -rf .claude/skills .claude/agents
 mkdir -p .claude/skills .claude/agents
@@ -134,13 +118,5 @@ mkdir -p .continue/rules
 } > .continue/rules/embedded-core.md
 log ".continue/rules" "written"
 
-# -------------------------------- DeepSeek / Qwen / generic AGENTS.md readers
-# These read AGENTS.md directly. Provide the common alternative filenames as
-# symlinks so no harness misses it.
-for alias in .agent.md .rules.md; do
-  ln -sfn AGENTS.md "$alias"
-done
-log "generic aliases" ".agent.md .rules.md -> AGENTS.md"
-
 echo
-echo "Done. Adapters are generated — edit AGENTS.md and re-run this script."
+echo "Done. AGENTS.md is canonical — edit it, then regenerate native adapters."

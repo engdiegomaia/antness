@@ -106,7 +106,8 @@ ln -sf ../../.agents/hooks/pre-commit .git/hooks/pre-commit # from an install.sh
 
 Claude Code users: merge `hooks/settings.claude.json` into `.claude/settings.json` for
 tool-call interception. Other harnesses get the same protection at the commit boundary
-and in CI — see [`multi-harness.md`](multi-harness.md).
+and in CI — see [`multi-harness.md`](multi-harness.md). Claude Code 2.1.277+ reads the
+canonical `AGENTS.md` directly when no `CLAUDE.md` is present in the repository path.
 
 ## Validating
 
@@ -126,9 +127,9 @@ Open your agent in the project. It should:
 3. State which testing layer produced each result — host, simulator, or hardware
 4. Refuse irreversible hardware commands without your explicit confirmation
 
-If it does not, the instruction file is not being read. Check that the adapter for your
-harness exists (`./scripts/sync-agent-configs.sh`) and that you are running the agent
-from the repository root.
+If it does not, check that the harness is reading `AGENTS.md` or its generated native
+adapter (`./scripts/sync-agent-configs.sh`) and that you are running the agent from the
+repository root. For Claude Code, confirm the version and Project instructions setting.
 
 ## Staying current
 
