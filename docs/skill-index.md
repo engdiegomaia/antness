@@ -11,6 +11,8 @@ Every skill, with the condition that should make an agent load it. Skills are lo
 | `serial-console-debug` | No console output, garbage output, setting up a new board's console |
 | `hardware-lab-safety` | **Before instructing any physical procedure** — power, probing, irreversible ops |
 | `requirements-traceability` | The product is in a regulated scope (safety, medical, automotive, CRA, 62443) |
+| `fpga-soc-design` | FPGA-based SoC partitioning, RTL implementation tradeoffs, AXI/DMA/coherency, or hardware acceleration architecture |
+| `cpu-architecture-riscv-dsp` | CPU pipeline/cache architecture, RISC-V ISA/extensions, DSP datapaths, or memory ordering |
 
 ## MCU (`mcu/skills/`)
 
@@ -21,6 +23,9 @@ Every skill, with the condition that should make an agent load it. Skills are lo
 | `freertos-mcuxpresso` | `FreeRTOSConfig.h`, MCUXpresso SDK tree present |
 | `stm32-hal-development` | `*.ioc`, `stm32*_hal_conf.h` present |
 | `nuttx-development` | `nuttx/` + `apps/`, NuttX `defconfig` present |
+| `bare-metal-cortex-m` | Cortex-M firmware has no RTOS and directly owns startup, linker layout, CMSIS/register peripherals, or fault handlers |
+| `embedded-cpp` | Embedded C++ design choices: templates, type safety, constexpr, C interop, or bare-metal patterns |
+| `autosar` | AUTOSAR Classic/Adaptive architecture, ARXML, SWC/RTE, BSW, COM, NvM, or OS configuration |
 | `mcu-edge-ai` | TFLite Micro, CMSIS-NN, eIQ, ESP-DL, Ethos-U, any on-MCU model |
 | `mcu-testing` | Writing or fixing firmware tests; setting up CI or a board farm |
 | `mcu-debug-trace` | Hard fault, hang, corruption, intermittent failure, latency measurement |
@@ -49,6 +54,8 @@ Start with `flow diagnose`; it reports exactly which piece of the loop is missin
 | `kernel-driver-development` | Kernel source, out-of-tree module, `obj-m` |
 | `device-tree` | Any `*.dts`, `*.dtsi`, `*.dtso` change; a peripheral that will not enumerate |
 | `android-aosp` | `Android.bp`, `device/<vendor>/` present |
+| `embedded-linux-applications` | Building/deploying Linux user-space Python, Qt or Rust apps, process/IPC design, container delivery or networked services |
+| `armv8-reverse-engineering` | Inspecting AArch64 ELF binaries, disassembly, calling conventions, exception levels or dynamic analysis |
 | `linux-edge-ai` | ONNX Runtime, TFLite delegate, NPU/GPU/VPU inference on the target |
 | `board-bringup` | New board or new SoM, first boot, no console, DDR issues |
 | `linux-testing` | `testimage`, ptest, kselftest, Labgrid, boot-time or soak testing |

@@ -23,6 +23,9 @@ ESP-IDF, STM32 HAL/LL, NuttX. Includes on-MCU inference (TFLite Micro, CMSIS-NN,
 | `FreeRTOSConfig.h`, MCUXpresso SDK tree, `board/pin_mux.c` | `skills/freertos-mcuxpresso` |
 | `*.ioc`, `stm32*_hal_conf.h`, `Core/Src/main.c` | `skills/stm32-hal-development` |
 | `nuttx/`, `apps/`, `boards/*/configs/*/defconfig` | `skills/nuttx-development` |
+| Cortex-M firmware without an RTOS; startup, linker script, registers, CMSIS | `skills/bare-metal-cortex-m` |
+| Embedded C++ firmware, templates, compile-time design, C interop | `skills/embedded-cpp` |
+| AUTOSAR Classic/Adaptive, ARXML, SWC/RTE, BSW, COM stack | `skills/autosar` |
 | Model files, `tflite`, `CMSIS-NN`, `eiq`, `esp-dl` | `skills/mcu-edge-ai` |
 | Test work | `skills/mcu-testing` |
 | Fault/hang/hardfault debugging | `skills/mcu-debug-trace` |

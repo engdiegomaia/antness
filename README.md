@@ -100,12 +100,13 @@ shared/
                            testing layers, security, git workflow
   roles/                   7 personas: firmware, BSP, bring-up, edge AI, security,
                            QA, release
-  skills/                  cross-compilation, serial console, lab safety, traceability
+  skills/                  cross-compilation, serial console, lab safety, traceability,
+                           FPGA/SoC and CPU/RISC-V/DSP architecture
   agents/                  embedded-security-reviewer, embedded-architect
-mcu/                       8 skills, 5 review agents, 3 rule files
+mcu/                       11 skills, 5 review agents, 3 rule files
   tools/                   build, probe, serial, flow — executable CLIs agents call
                            instead of ad-hoc shell
-linux-embedded/            9 skills, 5 review agents, 3 rule files
+linux-embedded/            11 skills, 5 review agents, 3 rule files
 hooks/                     destructive-command guard, quality gate, secret scan, pre-commit
 mcp/                       MCP server catalogue for embedded work
 shared/runtime/            embedded_agentic — config resolution, risk gating,

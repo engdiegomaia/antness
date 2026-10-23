@@ -25,6 +25,8 @@ Buildroot, kernel and driver development, device tree, AOSP, and on-device infer
 | `Makefile` with `obj-m`, `MODULE_LICENSE`, `Kconfig` in a kernel tree | `skills/kernel-driver-development` |
 | `*.dts`, `*.dtsi`, `*.dtbo`, `arch/*/boot/dts/` | `skills/device-tree` |
 | `Android.bp`, `device/<vendor>/`, `AndroidProducts.mk` | `skills/android-aosp` |
+| Embedded Linux user-space applications: Python, Qt, Rust, IPC, containers, CI/CD | `skills/embedded-linux-applications` |
+| AArch64 ELF disassembly, instruction-level debugging, or reverse engineering | `skills/armv8-reverse-engineering` |
 | Model files, ONNX, TFLite, NPU/VPU/GPU delegate | `skills/linux-edge-ai` |
 | New board, first boot, no console | `skills/board-bringup` |
 | Test work | `skills/linux-testing` |
