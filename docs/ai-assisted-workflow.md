@@ -72,12 +72,22 @@ Existing controls remain mandatory:
 Run `python3 -m unittest discover -s evals -v` to exercise the workflow contract without
 model calls, credentials, or hardware. The cases cover valid stage progression, evidence
 requirements, skipped-stage rejection, failed-check blocking, and preservation of prior
-baby-step history. Existing CI safety scenarios continue to verify hardware command
-guardrails. The suite also exercises the destructive-command guard: irreversible flash,
-fuse, and block-device writes must be blocked, while build and read-only commands remain
-allowed. Runtime tests cover structured validation provenance. When adding a workflow
-rule, add a passing case, a counterexample that must be rejected, and an unrelated case
-where the rule must not interfere.
+baby-step history. The destructive-command guard is exercised with operations that must
+be blocked and build/read-only commands that must remain allowed.
+
+The scenario evaluator checks structured agent reports for track/skill routing, change
+scope, missing hardware facts, validation provenance, and confirmation behavior. It does
+not call an LLM: capture the agent's final report in the documented JSON shape and score
+it against a scenario:
+
+    python3 evals/evaluate_report.py --scenario flash-needs-confirmation --report /tmp/agent-report.json
+
+Available scenarios and report fields are defined in evals/scenarios.json. CI tests the
+evaluator with conforming and intentionally unsafe reports. This checks report quality
+and workflow rules; it does not prove that an agent performed the reported actions.
+Runtime tests also cover structured validation provenance. When adding a workflow rule,
+add a passing case, a counterexample that must be rejected, and an unrelated case where
+the rule must not interfere.
 
 ## Design references
 
