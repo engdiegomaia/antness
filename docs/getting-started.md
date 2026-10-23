@@ -118,6 +118,19 @@ canonical `AGENTS.md` directly when no `CLAUDE.md` is present in the repository 
 Checks skill and agent frontmatter, that names match filenames, that adapters are not
 stale, that there are no dangling symlinks, and that hooks are executable and parse.
 
+## AI-assisted implementation
+
+Use the local step gate to keep agent changes small and evidence-backed:
+
+```bash
+python3 scripts/implementation_gate.py start --task "<task>" \
+  --step "<one small change>" --acceptance "<observable outcome>"
+```
+
+Follow the `ready → implemented → verified → reviewed` sequence and record each gate's
+evidence. A failed check blocks the step. See [`ai-assisted-workflow.md`](ai-assisted-workflow.md)
+for the full lifecycle, stop conditions, and offline evaluations.
+
 ## Using it
 
 Open your agent in the project. It should:

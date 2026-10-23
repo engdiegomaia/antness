@@ -64,3 +64,4 @@ session-*.log
 # project.json IS versioned — it is the team's shared hardware context.
 .embedded-agentic/local.json
 .embedded-agentic/state.json
+.embedded-agentic/implementation.json

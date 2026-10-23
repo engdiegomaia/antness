@@ -140,6 +140,12 @@ file breaks a colleague's clone — `flow diagnose` reports these.
 7. Report where each result was obtained (host/sim/hardware)
 ```
 
+For implementation tasks, use the gated baby-step loop in
+[`docs/ai-assisted-workflow.md`](docs/ai-assisted-workflow.md) and
+`scripts/implementation_gate.py`. Advance one reviewable change at a time through
+`ready -> implemented -> verified -> reviewed`; failed checks and missing evidence stop
+the sequence. The gate records evidence and never runs checks or hardware commands itself.
+
 Never skip step 2. Most embedded agent failures are missing-context failures, not
 reasoning failures.
 

@@ -85,6 +85,9 @@ jobs:
       - name: Runtime unit tests
         run: python3 -m unittest discover -s tests -v
 
+      - name: Offline agent workflow evaluations
+        run: python3 -m unittest discover -s evals -v
+
       - name: Every tool answers --help
         run: |
           set -e

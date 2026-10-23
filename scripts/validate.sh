@@ -150,6 +150,20 @@ else
 fi
 
 echo
+echo "Offline agent workflow evaluations"
+if [ -f evals/test_implementation_gate.py ]; then
+  if python3 -m unittest discover -s evals -q >/tmp/ea-evals.$$ 2>&1; then
+    ok "implementation gate evaluations pass"
+  else
+    bad "implementation gate evaluations fail:"
+    sed 's/^/      /' /tmp/ea-evals.$$
+  fi
+  rm -f /tmp/ea-evals.$$
+else
+  warn "offline workflow evaluations are not installed"
+fi
+
+echo
 echo "Config layer hygiene"
 if [ -d .embedded-agentic ]; then
   findings="$(python3 -c "
