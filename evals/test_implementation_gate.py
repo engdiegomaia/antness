@@ -9,6 +9,7 @@ import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CLI = ROOT / "scripts" / "implementation_gate.py"
+HARDWARE_GUARD = ROOT / "hooks" / "guard-destructive-hardware.sh"
 
 
 class ImplementationGateEvals(unittest.TestCase):
@@ -91,6 +92,37 @@ class ImplementationGateEvals(unittest.TestCase):
         self.assertEqual(len(state["steps"]), 2)
         self.assertEqual(state["steps"][0]["stage"], "reviewed")
         self.assertEqual(state["steps"][1]["stage"], "ready")
+
+
+class HardwareGuardEvals(unittest.TestCase):
+    def evaluate(self, command):
+        return subprocess.run(
+            [str(HARDWARE_GUARD), command],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    def test_irreversible_flash_fuse_and_block_device_writes_are_blocked(self):
+        commands = (
+            "espefuse.py burn_efuse SECURE_BOOT_EN",
+            "dd if=core-image.wic of=/dev/mmcblk0",
+            "nrfjprog --eraseall",
+            "fw_setenv bootcmd 'run mmcboot'",
+        )
+        for command in commands:
+            with self.subTest(command=command):
+                self.assertEqual(self.evaluate(command).returncode, 2)
+
+    def test_build_and_read_only_commands_remain_allowed(self):
+        commands = (
+            "west build -b nucleo_h743zi app",
+            "bitbake core-image-minimal",
+            "git status",
+        )
+        for command in commands:
+            with self.subTest(command=command):
+                self.assertEqual(self.evaluate(command).returncode, 0)
 
 
 if __name__ == "__main__":

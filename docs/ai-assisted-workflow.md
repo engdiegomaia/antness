@@ -73,8 +73,11 @@ Run `python3 -m unittest discover -s evals -v` to exercise the workflow contract
 model calls, credentials, or hardware. The cases cover valid stage progression, evidence
 requirements, skipped-stage rejection, failed-check blocking, and preservation of prior
 baby-step history. Existing CI safety scenarios continue to verify hardware command
-guardrails. When adding a workflow rule, add a passing case, a counterexample that must be
-rejected, and an unrelated case where the rule must not interfere.
+guardrails. The suite also exercises the destructive-command guard: irreversible flash,
+fuse, and block-device writes must be blocked, while build and read-only commands remain
+allowed. Runtime tests cover structured validation provenance. When adding a workflow
+rule, add a passing case, a counterexample that must be rejected, and an unrelated case
+where the rule must not interfere.
 
 ## Design references
 
