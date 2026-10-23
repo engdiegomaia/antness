@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Host-side tooling for working in this repository. It deliberately does NOT install a
 # cross toolchain or an SDK: those are pinned per project and belong in the project's
-# own build container (see shared/rules/20-toolchain-determinism.md).
+# own build container (see .ai/rules/shared/20-toolchain-determinism.md).
 set -euo pipefail
 
 sudo apt-get update -qq
@@ -20,8 +20,8 @@ sudo apt-get install -y -qq --no-install-recommends \
 sudo usermod -aG dialout "$USER" || true
 
 # Install the git pre-commit hook if this is a git checkout
-if [ -d .git ] && [ -f hooks/pre-commit ]; then
-  ln -sf ../../hooks/pre-commit .git/hooks/pre-commit
+if [ -d .git ] && [ -f .ai/hooks/pre-commit ]; then
+  ln -sf ../../.ai/hooks/pre-commit .git/hooks/pre-commit
   echo "pre-commit hook installed"
 fi
 

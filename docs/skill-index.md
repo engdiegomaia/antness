@@ -3,7 +3,7 @@
 Every skill, with the condition that should make an agent load it. Skills are loaded
 **before** acting, not after a mistake.
 
-## Shared (`shared/skills/`)
+## Shared (`.ai/skills/shared/`)
 
 | Skill | Load when |
 |-------|-----------|
@@ -14,7 +14,7 @@ Every skill, with the condition that should make an agent load it. Skills are lo
 | `fpga-soc-design` | FPGA-based SoC partitioning, RTL implementation tradeoffs, AXI/DMA/coherency, or hardware acceleration architecture |
 | `cpu-architecture-riscv-dsp` | CPU pipeline/cache architecture, RISC-V ISA/extensions, DSP datapaths, or memory ordering |
 
-## MCU (`mcu/skills/`)
+## MCU (`.ai/skills/mcu/`)
 
 | Skill | Load when |
 |-------|-----------|
@@ -30,7 +30,7 @@ Every skill, with the condition that should make an agent load it. Skills are lo
 | `mcu-testing` | Writing or fixing firmware tests; setting up CI or a board farm |
 | `mcu-debug-trace` | Hard fault, hang, corruption, intermittent failure, latency measurement |
 
-## MCU executable tools (`mcu/tools/`)
+## MCU executable tools (`.ai/skills/mcu-tools/`)
 
 These are not reference skills — they are CLIs with a `SKILL.md` describing how to drive
 them. Prefer them over raw shell for anything that touches a board.
@@ -44,7 +44,7 @@ them. Prefer them over raw shell for anything that touches a board.
 
 Start with `flow diagnose`; it reports exactly which piece of the loop is missing.
 
-## Embedded Linux (`linux-embedded/skills/`)
+## Embedded Linux (`.ai/skills/linux-embedded/`)
 
 | Skill | Load when |
 |-------|-----------|
@@ -63,8 +63,8 @@ Start with `flow diagnose`; it reports exactly which piece of the loop is missin
 ## Selection order
 
 1. Determine the track from the repository (root `AGENTS.md` section 2)
-2. Load `shared/rules/*` — always
-3. Load the track's `AGENTS.md`
+2. Load `.ai/rules/shared/*` — always
+3. Load `.ai/tracks/<track>/AGENTS.md`
 4. Load the one skill that matches the task
 5. Load a second skill only if the task genuinely spans two (e.g. a device tree change
    for an NPU used by `linux-edge-ai`)

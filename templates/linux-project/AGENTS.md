@@ -1,6 +1,6 @@
 # AGENTS.md — <project name>
 
-> Project-specific context. The shared environment is in `.agents/`; this file is the
+> Project-specific context. The shared environment is in `.ai/`; this file is the
 > part only you can write. Agents read it before touching hardware.
 
 ## Hardware
@@ -27,7 +27,7 @@ Bootloader:       <U-Boot version, boot order>
 Boot chain:       ROM -> <SPL> -> <U-Boot> -> <kernel> -> <initramfs?> -> <rootfs>
 Update mechanism: <none / RAUC / swupdate / Torizon Cloud / OSTree / A-B>
 Layers:           <list with pinned revisions, or the kas/repo manifest path>
-Track skill:      <linux-embedded/skills/...>
+Track skill:      <.ai/skills/linux-embedded/...>
 ```
 
 ## Commands

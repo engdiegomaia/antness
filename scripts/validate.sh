@@ -19,15 +19,15 @@ echo "Core files"
 for f in AGENTS.md; do
   [ -f "$f" ] && ok "$f" || bad "$f missing"
 done
-for d in shared/rules shared/roles; do
-  [ -d "$d" ] && ok "$d/" || warn "$d/ missing"
+for d in .ai/README.md .ai/rules/shared .ai/roles .ai/skills .ai/agents .ai/tracks .ai/hooks .ai/mcp; do
+  [ -e "$d" ] && ok "$d" || bad "$d missing"
 done
 
 echo
 echo "Skills"
 shopt -s nullglob
-for s in shared/skills/*/SKILL.md mcu/skills/*/SKILL.md linux-embedded/skills/*/SKILL.md \
-         mcu/tools/*/SKILL.md .agents/*/skills/*/SKILL.md .agents/*/tools/*/SKILL.md; do
+for s in .ai/skills/shared/*/SKILL.md .ai/skills/mcu/*/SKILL.md \
+         .ai/skills/linux-embedded/*/SKILL.md .ai/skills/mcu-tools/*/SKILL.md; do
   dir="$(dirname "$s")"; name="$(basename "$dir")"
   head -1 "$s" | grep -q '^---$' || { bad "$s: no YAML frontmatter"; continue; }
   fm_name="$(sed -n '2,10p' "$s" | grep '^name:' | head -1 | cut -d: -f2- | xargs)"
@@ -41,7 +41,7 @@ done
 
 echo
 echo "Agents"
-for a in shared/agents/*.md mcu/agents/*.md linux-embedded/agents/*.md .agents/*/agents/*.md; do
+for a in .ai/agents/shared/*.md .ai/agents/mcu/*.md .ai/agents/linux-embedded/*.md; do
   base="$(basename "$a" .md)"
   head -1 "$a" | grep -q '^---$' || { bad "$a: no YAML frontmatter"; continue; }
   fm_name="$(sed -n '2,12p' "$a" | grep '^name:' | head -1 | cut -d: -f2- | xargs)"
@@ -57,7 +57,7 @@ done
 echo
 echo "Adapters"
 if [ -f AGENTS.md ]; then
-  if [ -e CLAUDE.md ] || [ -e .claude/CLAUDE.md ] || [ -e CLAUDE.local.md ]; then
+  if [ -e CLAUDE.md ] || [ -e CLAUDE.local.md ]; then
     bad "Claude instruction alias masks AGENTS.md; remove it or configure Claude to read both"
   else
     ok "Claude Code can read AGENTS.md directly"
@@ -76,6 +76,17 @@ if [ -f AGENTS.md ]; then
 fi
 
 echo
+echo "Vendor-specific config directories"
+vendor_dirs=0
+for d in .claude .codex .cursor .continue; do
+  if [ -e "$d" ]; then
+    bad "$d must not exist; keep harness sources in .ai/"
+    vendor_dirs=1
+  fi
+done
+[ $vendor_dirs -eq 0 ] && ok "none"
+
+echo
 echo "Broken symlinks"
 broken="$(find . -type l ! -exec test -e {} \; -print 2>/dev/null)"
 if [ -n "$broken" ]; then
@@ -87,8 +98,8 @@ fi
 
 echo
 echo "Executable tools"
-if [ -d mcu/tools ] || [ -d .agents/mcu/tools ]; then
-  runtime="$(ls -d shared/runtime .agents/shared/runtime 2>/dev/null | head -1)"
+if [ -d mcu/tools ]; then
+  runtime="shared/runtime"
   if [ -n "$runtime" ]; then
     if PYTHONPATH="$runtime" python3 -c "import embedded_agentic" 2>/dev/null; then
       ok "runtime package imports"
@@ -99,7 +110,7 @@ if [ -d mcu/tools ] || [ -d .agents/mcu/tools ]; then
     bad "mcu/tools present but shared/runtime is missing"
   fi
 
-  for cli in mcu/tools/*/scripts/*_cli.py .agents/mcu/tools/*/scripts/*_cli.py; do
+  for cli in mcu/tools/*/scripts/*_cli.py; do
     [ -f "$cli" ] || continue
     name="$(basename "$cli")"
     if ! python3 -c "import ast,sys; ast.parse(open(sys.argv[1]).read())" "$cli" 2>/dev/null; then
@@ -128,7 +139,7 @@ done
 
 echo
 echo "Hooks"
-for h in hooks/*.sh hooks/pre-commit .agents/hooks/*.sh; do
+for h in .ai/hooks/*.sh .ai/hooks/pre-commit; do
   [ -e "$h" ] || continue
   [ -x "$h" ] && ok "$(basename "$h") executable" || bad "$h not executable"
   bash -n "$h" 2>/dev/null || bad "$h has a syntax error"

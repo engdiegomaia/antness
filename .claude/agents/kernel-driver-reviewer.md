@@ -1,1 +1,0 @@
-../../linux-embedded/agents/kernel-driver-reviewer.md

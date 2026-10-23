@@ -23,5 +23,5 @@
 
 ## Safety
 
-- [ ] This does not weaken `shared/rules/10-hardware-safety.md` or the destructive-command guard
+- [ ] This does not weaken `.ai/rules/shared/10-hardware-safety.md` or the destructive-command guard
 - [ ] If it does, explain why and tag a second reviewer

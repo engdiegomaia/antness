@@ -1,1 +1,0 @@
-../../linux-embedded/agents/torizon-container-reviewer.md

@@ -90,7 +90,7 @@ git clone https://github.com/micron-iot/embedded-agentic ~/tools/embedded-agenti
 |------|-----------|
 | `--mode link` (default) | symlinks into the template clone — improvements propagate to every project |
 | `--mode copy` | self-contained copy — for handing a project to someone without the template |
-| `--user` | also installs shared skills/agents into `~/.claude` for use across all projects |
+| `--user` | also installs shared and selected track harness sources into `~/.ai` for use across all projects |
 
 Then fill in the project-specific section of the generated `AGENTS.md`. Field-by-field
 templates are in `templates/mcu-project/` and `templates/linux-project/`.
@@ -100,12 +100,10 @@ templates are in `templates/mcu-project/` and `templates/linux-project/`.
 ## Wiring the hooks
 
 ```bash
-ln -sf ../../hooks/pre-commit .git/hooks/pre-commit        # from a scaffolded project
-ln -sf ../../.agents/hooks/pre-commit .git/hooks/pre-commit # from an install.sh install
 ```
 
-Claude Code users: merge `hooks/settings.claude.json` into `.claude/settings.json` for
-tool-call interception. Other harnesses get the same protection at the commit boundary
+Optional Claude Code hook settings are in `.ai/adapters/claude-hooks.json`; copy them into
+your local harness configuration if you want tool-call interception. Other harnesses get the same protection at the commit boundary
 and in CI — see [`multi-harness.md`](multi-harness.md). Claude Code 2.1.277+ reads the
 canonical `AGENTS.md` directly when no `CLAUDE.md` is present in the repository path.
 
@@ -140,9 +138,8 @@ Open your agent in the project. It should:
 3. State which testing layer produced each result — host, simulator, or hardware
 4. Refuse irreversible hardware commands without your explicit confirmation
 
-If it does not, check that the harness is reading `AGENTS.md` or its generated native
-adapter (`./scripts/sync-agent-configs.sh`) and that you are running the agent from the
-repository root. For Claude Code, confirm the version and Project instructions setting.
+If it does not, check that the harness reads `AGENTS.md` and follows its `.ai/` references and that you are running the agent from the
+repository root. Configure harness-specific tool settings locally; do not commit vendor-specific config directories.
 
 ## Staying current
 
@@ -151,21 +148,21 @@ repository root. For Claude Code, confirm the version and Project instructions s
 ./scripts/update-from-upstream.sh
 ```
 
-Pulls `shared/`, the track directories, `hooks/`, `scripts/` and `docs/` from upstream.
+Pulls `.ai/`, executable track tools, runtime libraries, scripts and docs from upstream.
 `AGENTS.md` is never overwritten — your hardware context stays. Upstream changes to the
 rule sections are reported so you can merge them deliberately.
 
 ## Extending
 
 ```bash
-mkdir -p mcu/skills/my-rtos
-$EDITOR mcu/skills/my-rtos/SKILL.md     # frontmatter: name (= directory), description
-$EDITOR mcu/AGENTS.md docs/skill-index.md   # add the routing entry
+mkdir -p .ai/skills/mcu/my-rtos
+$EDITOR .ai/skills/mcu/my-rtos/SKILL.md     # frontmatter: name (= directory), description
+$EDITOR .ai/tracks/mcu/AGENTS.md docs/skill-index.md   # add the routing entry
 ./scripts/sync-agent-configs.sh && ./scripts/validate.sh
 ```
 
-Agents are markdown files in `<track>/agents/` with `name`, `description`, `tools` and
-`model` frontmatter. Rules go in `shared/rules/` or a track's `rules/`, referenced from
+Agents are Markdown files in `.ai/agents/<track>/` with `name`, `description`, `tools` and
+`model` frontmatter. Rules go in `.ai/rules/shared/` or `.ai/rules/<track>/`, referenced from
 the relevant `AGENTS.md`.
 
 Contributions back to the template: see [`../CONTRIBUTING.md`](../CONTRIBUTING.md).

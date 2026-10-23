@@ -1,6 +1,6 @@
 # AGENTS.md — <project name>
 
-> Project-specific context. The shared environment is in `.agents/`; this file is the
+> Project-specific context. The shared environment is in `.ai/`; this file is the
 > part only you can write. Agents read it before touching hardware.
 
 ## Hardware
@@ -24,7 +24,7 @@ Recovery:         <DFU / serial download / JTAG / boot switches — how to unbri
 RTOS:             <none / Zephyr <ver> / FreeRTOS <ver> / NuttX <ver> / ESP-IDF <ver>>
 SDK:              <version, pinned where>
 Toolchain:        <arm-none-eabi-gcc version, pinned where>
-Track skill:      <mcu/skills/...>
+Track skill:      <.ai/skills/mcu/...>
 ```
 
 ## Commands

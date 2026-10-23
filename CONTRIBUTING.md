@@ -8,20 +8,20 @@ it makes that starting point better.
 
 | Contribution | Where |
 |--------------|-------|
-| New ecosystem support (a new RTOS, a new build system) | a new skill in `mcu/skills/` or `linux-embedded/skills/` |
+| New ecosystem support (a new RTOS, a new build system) | a new skill in `.ai/skills/mcu/` or `.ai/skills/linux-embedded/` |
 | Hard-won knowledge about an existing ecosystem | the existing `SKILL.md` — especially the "common failure modes" table |
-| A review discipline that catches real bugs | an agent in `<track>/agents/` |
-| A universal constraint | `shared/rules/` |
+| A review discipline that catches real bugs | an agent in `.ai/agents/<track>/` |
+| A universal constraint | `.ai/rules/shared/` |
 | Support for another agent harness | `scripts/sync-agent-configs.sh` + `docs/multi-harness.md` |
 
 ## What does not belong here
 
 - Project-specific content. This is the template; your board's quirks go in your
   project's `AGENTS.md`.
-- Generated files. `.cursor/rules/`, `.github/copilot-instructions.md`, `.continue/`,
-  `.codex/`, `GEMINI.md`, and `.claude/{skills,agents}/` are produced by
-  `scripts/sync-agent-configs.sh`. Do not add a root `CLAUDE.md`; it masks native loading
-  of `AGENTS.md` in Claude Code.
+- Generated pointer files. GEMINI.md and .github/copilot-instructions.md come from
+  scripts/sync-agent-configs.sh. Do not create .claude, .codex, .cursor, or .continue
+  directories, or duplicate .ai skills, agents, and rules into vendor-specific locations.
+  Do not add a root CLAUDE.md that conflicts with AGENTS.md discovery.
 - Generic coding advice an agent already knows. Content earns its place by being
   specific: a command that works, a failure mode with its cause, a value with its
   datasheet citation.
@@ -43,7 +43,7 @@ A skill is read by an agent that is about to act. Write for that reader.
 
 ```bash
 # 1. Make the change to the canonical source (never to a generated adapter)
-$EDITOR mcu/skills/zephyr-development/SKILL.md
+$EDITOR .ai/skills/mcu/zephyr-development/SKILL.md
 
 # 2. Regenerate adapters and validate
 ./scripts/sync-agent-configs.sh
@@ -67,8 +67,8 @@ Scope: the skill, agent, rule, or track touched (`zephyr`, `yocto`, `mcu-rules`,
 ## Adding a skill
 
 ```bash
-mkdir -p mcu/skills/my-rtos
-cat > mcu/skills/my-rtos/SKILL.md <<'SKILL'
+mkdir -p .ai/skills/mcu/my-rtos
+cat > .ai/skills/mcu/my-rtos/SKILL.md <<'SKILL'
 ---
 name: my-rtos              # MUST match the directory name — validate.sh enforces this
 description: <one line saying when an agent should load this>
@@ -76,15 +76,15 @@ track: mcu
 ---
 SKILL
 ```
-Then add the routing entry to `mcu/AGENTS.md` and the row to `docs/skill-index.md`.
+Then add the routing entry to `.ai/tracks/mcu/AGENTS.md` and the row to `docs/skill-index.md`.
 
 ## Adding an agent
 
-A markdown file in `<track>/agents/` with `name` (matching the filename), `description`,
+A Markdown file in `.ai/agents/<track>/` with `name` (matching the filename), `description`,
 `tools` and `model` frontmatter. Write it as instructions to a reviewer, not as
 documentation about reviewing.
 
 ## Review
 
-Changes to `shared/rules/10-hardware-safety.md` or `hooks/guard-destructive-hardware.sh`
+Changes to `.ai/rules/shared/10-hardware-safety.md` or `.ai/hooks/guard-destructive-hardware.sh`
 need a second reviewer. Weakening a safety rule is never a drive-by change.

@@ -15,7 +15,7 @@ Mode 3 is for a customer or production unit. The default is 2.
 
 "irreversible" is never auto-approved at any mode, because there is no mode in
 which burning a fuse should happen without a human saying so. This mirrors
-shared/rules/10-hardware-safety.md, which applies whether or not this module
+.ai/rules/shared/10-hardware-safety.md, which applies whether or not this module
 is in the call path.
 """
 from __future__ import annotations

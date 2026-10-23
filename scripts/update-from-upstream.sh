@@ -33,14 +33,28 @@ git fetch "$REMOTE" "$REF"
 # Paths that belong to the environment and are safe to take from upstream.
 # AGENTS.md is deliberately excluded: it carries this project's hardware context.
 ENV_PATHS=(
-  shared/
-  mcu/
-  linux-embedded/
-  hooks/
+  .ai/README.md
+  .ai/adapters/
+  .ai/roles/
+  .ai/rules/shared/
+  .ai/agents/shared/
+  .ai/skills/shared/
+  .ai/hooks/
+  .ai/mcp/
+  .ai/tracks/mcu/
+  .ai/tracks/linux-embedded/
+  .ai/agents/mcu/
+  .ai/agents/linux-embedded/
+  .ai/rules/mcu/
+  .ai/rules/linux-embedded/
+  .ai/skills/mcu/
+  .ai/skills/linux-embedded/
+  .ai/skills/mcu-tools/
+  mcu/tools/
+  shared/runtime/
   scripts/sync-agent-configs.sh
   scripts/validate.sh
   scripts/update-from-upstream.sh
-  mcp/
   docs/skill-index.md
   docs/multi-harness.md
   docs/getting-started.md

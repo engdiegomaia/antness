@@ -1,1 +1,0 @@
-../../mcu/agents/hal-driver-writer.md

@@ -95,21 +95,12 @@ under them.
 ## What you get
 
 ```
-AGENTS.md                  canonical instructions — every harness reads this
-shared/
-  rules/                   core principles, hardware safety, toolchain determinism,
-                           testing layers, security, git workflow
-  roles/                   7 personas: firmware, BSP, bring-up, edge AI, security,
-                           QA, release
-  skills/                  cross-compilation, serial console, lab safety, traceability,
-                           FPGA/SoC and CPU/RISC-V/DSP architecture
-  agents/                  embedded-security-reviewer, embedded-architect
-mcu/                       11 skills, 5 review agents, 3 rule files
-  tools/                   build, probe, serial, flow — executable CLIs agents call
-                           instead of ad-hoc shell
-linux-embedded/            11 skills, 5 review agents, 3 rule files
-hooks/                     destructive-command guard, quality gate, secret scan, pre-commit
-mcp/                       MCP server catalogue for embedded work
+AGENTS.md                  canonical universal entrypoint
+.ai/                       shared and track-specific agents, roles, rules, skills, adapters
+  tracks/                  MCU and Linux scoped AGENTS.md instructions
+mcu/tools/                 executable build, probe, serial and flow CLIs
+.ai/hooks/                     destructive-command guard, quality gate, secret scan, pre-commit
+.ai/mcp/                       MCP server catalogue for embedded work
 shared/runtime/            embedded_agentic — config resolution, risk gating,
                            structured results (stdlib only, Python 3.9+)
 .embedded-agentic/         machine-readable project context (project.json versioned,
@@ -153,32 +144,29 @@ Full list with load conditions: [`docs/skill-index.md`](docs/skill-index.md)
 
 ## Multi-harness by design
 
-`AGENTS.md` is canonical and hand-written. Harness-specific adapters are generated:
+AGENTS.md is the canonical entrypoint. All skills, agents, roles and rules live in the
+vendor-neutral .ai/ tree. Run the sync script to refresh thin Gemini and Copilot pointer
+files:
 
 ```bash
 ./scripts/sync-agent-configs.sh
 ```
 
-→ `.claude/{skills,agents}/`, `.codex/config.toml`, `.cursor/rules/*.mdc`, `GEMINI.md`,
-`.github/copilot-instructions.md`, and `.continue/rules/`. No root `CLAUDE.md` is generated:
-Claude Code 2.1.277+ reads `AGENTS.md` natively when no `CLAUDE.md` masks it.
+The script does not create .claude, .codex, .cursor, or .continue directories. Harnesses
+read AGENTS.md and follow its references to .ai/. Hardware safety relies on executable
+tools, hooks, pre-commit, and CI, not vendor-specific discovery.
 
-Only some harnesses support subagents, on-demand skills and tool-call hooks, so
-**nothing critical depends on them**: skills and agents are plain markdown any agent can
-be pointed at, and the hooks also run as a git `pre-commit` hook and in CI. The safety
-rules hold whichever agent is driving.
-
-Details: [`docs/multi-harness.md`](docs/multi-harness.md)
+Details: [docs/multi-harness.md](docs/multi-harness.md)
 
 ## Safety posture
 
-[`shared/rules/10-hardware-safety.md`](shared/rules/10-hardware-safety.md) defines
+[`.ai/rules/shared/10-hardware-safety.md`](.ai/rules/shared/10-hardware-safety.md) defines
 operations an agent must never run autonomously: fuse and eFuse burning, secure boot
 enablement, bootloader overwrite on the only boot medium, partition table changes, mass
 erase, boot environment edits, fleet update pushes. Each requires the agent to state the
 target device, what becomes irreversible, and the recovery path — then wait.
 
-`hooks/guard-destructive-hardware.sh` enforces a subset at the tool-call and commit
+`.ai/hooks/guard-destructive-hardware.sh` enforces a subset at the tool-call and commit
 boundary, and CI tests that it actually blocks. It is a safety net, not the policy —
 pattern matching always misses cases.
 

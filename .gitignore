@@ -56,9 +56,7 @@ venv/
 boot-*.log
 session-*.log
 
-# Local agent state
-.claude/settings.local.json
-.claude/state/
+# Local workflow state is stored under .embedded-agentic/.
 
 # Machine-local tool configuration and run state.
 # project.json IS versioned — it is the team's shared hardware context.

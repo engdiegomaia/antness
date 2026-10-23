@@ -33,15 +33,16 @@ Has Kconfig + Makefile with obj-m / *.dts              -> linux-embedded/ + kern
 Has Android.bp / device/<vendor>/                      -> linux-embedded/ + android-aosp
 ```
 
-Then load: `shared/rules/*` + the track's `<track>/AGENTS.md` + the matching skill.
+Then load .ai/rules/shared/*, .ai/tracks/<track>/AGENTS.md, and the matching skill from
+.ai/skills/<scope>/<name>/SKILL.md. Use .ai/README.md as the structure map.
 
 ## 3. Non-negotiable rules
 
-These override any generic coding advice. Full text in `shared/rules/`.
+These override any generic coding advice. Full text in `.ai/rules/shared/`.
 
 1. **Hardware is not undoable.** Never execute a command that writes to flash, eMMC,
    fuses (OTP/eFuse), bootloader environment, or secure boot keys without explicit,
-   per-command user confirmation. See `shared/rules/10-hardware-safety.md`.
+   per-command user confirmation. See `.ai/rules/shared/10-hardware-safety.md`.
 2. **Determinism over convenience.** Toolchain, SDK and layer revisions are pinned.
    Never bump a revision as a side effect of another task.
 3. **Constrained resources are a correctness property.** Flash/RAM/stack budgets, ISR
@@ -57,7 +58,7 @@ These override any generic coding advice. Full text in `shared/rules/`.
 
 ## 4. Roles
 
-Personas in `shared/roles/`. Adopt the one matching the task; state which one you adopted.
+Personas in `.ai/roles/`. Adopt the one matching the task; state which one you adopted.
 
 | Role | Use for |
 |------|---------|
@@ -71,9 +72,8 @@ Personas in `shared/roles/`. Adopt the one matching the task; state which one yo
 
 ## 5. Agents (subagent definitions)
 
-Portable agent definitions live in `shared/agents/`, `mcu/agents/`, `linux-embedded/agents/`.
-Each is a markdown file with YAML frontmatter (`name`, `description`, `tools`, `model`) —
-the Claude Code subagent format, which Codex/Cursor/Continue read as plain prompt files.
+Portable agent definitions live in `.ai/agents/shared/`, `.ai/agents/mcu/`, `.ai/agents/linux-embedded/`.
+Each is a markdown file with YAML frontmatter (`name`, `description`, `tools`, `model`) and can be read directly by any harness.
 
 Invoke proactively:
 - Code written or modified in firmware -> `firmware-reviewer`
@@ -85,7 +85,7 @@ Invoke proactively:
 
 ## 6. Skills
 
-Skills are `SKILL.md` files with YAML frontmatter under `<track>/skills/<name>/`.
+Skills are `SKILL.md` files with YAML frontmatter under `.ai/skills/<scope>/<name>/`.
 They are loaded on demand — read the one matching the task before acting, not after.
 `docs/skill-index.md` lists all of them with trigger conditions.
 
@@ -162,14 +162,14 @@ Always state in the body which hardware the change was validated on, or that it 
 
 | Harness | Entry point | Mechanism |
 |---------|-------------|-----------|
-| Claude Code | `AGENTS.md` (v2.1.277+) | Native fallback; no `CLAUDE.md` may exist on the repo path; skills/agents auto-discovered |
-| OpenAI Codex | `AGENTS.md` | Native |
-| Cursor | `.cursor/rules/*.mdc` | Generated from this file |
-| Gemini CLI | `GEMINI.md` | Pointer file |
-| DeepSeek / generic | `AGENTS.md` | Native (open standard) |
-| GitHub Copilot | `.github/copilot-instructions.md` | Generated |
-| Continue | `.continue/rules/` | Generated |
+| Claude Code | AGENTS.md (v2.1.277+) | Read skills and agent instructions from .ai/ by reference |
+| OpenAI Codex | AGENTS.md | Native |
+| Cursor | AGENTS.md | Use root instructions and referenced .ai/ files |
+| Gemini CLI | GEMINI.md | Generated pointer to AGENTS.md |
+| DeepSeek / generic | AGENTS.md | Native open format |
+| GitHub Copilot | .github/copilot-instructions.md | Generated pointer to AGENTS.md and .ai/ |
+| Continue | AGENTS.md | Point the harness at the canonical entrypoint |
 
-Regenerate native harness adapters with `./scripts/sync-agent-configs.sh` after editing
-this file. `CLAUDE.md` is intentionally absent so Claude Code loads `AGENTS.md` directly.
-Other harness-specific files are generated artifacts — changes to them are lost on the next sync.
+Run ./scripts/sync-agent-configs.sh after editing AGENTS.md to refresh the two lightweight
+pointer files. It does not create vendor-specific directories. All skills, agents, and
+rules remain in .ai/.

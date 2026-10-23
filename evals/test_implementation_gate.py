@@ -9,7 +9,7 @@ import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CLI = ROOT / "scripts" / "implementation_gate.py"
-HARDWARE_GUARD = ROOT / "hooks" / "guard-destructive-hardware.sh"
+HARDWARE_GUARD = ROOT / ".ai" / "hooks" / "guard-destructive-hardware.sh"
 
 
 class ImplementationGateEvals(unittest.TestCase):

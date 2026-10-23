@@ -1,1 +1,0 @@
-../../mcu/agents/rtos-concurrency-auditor.md

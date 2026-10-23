@@ -224,7 +224,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                  next_steps=["Garbage instead of text usually means a baud mismatch, which "
                              "usually means a clock configuration problem",
                              "Silence usually means wrong pin, no power, or a reset loop",
-                             "See mcu/skills/../shared/skills/serial-console-debug"]),
+                             "See .ai/skills/shared/serial-console-debug"]),
             args.json,
         )
 

@@ -57,16 +57,16 @@ stack_track() {
 }
 stack_skill() {
   case "$1" in
-    zephyr)    echo mcu/skills/zephyr-development ;;
-    esp-idf)   echo mcu/skills/esp-idf-development ;;
-    freertos)  echo mcu/skills/freertos-mcuxpresso ;;
-    stm32)     echo mcu/skills/stm32-hal-development ;;
-    nuttx)     echo mcu/skills/nuttx-development ;;
-    yocto)     echo linux-embedded/skills/yocto-openembedded ;;
-    torizon)   echo linux-embedded/skills/torizon-os ;;
-    buildroot) echo linux-embedded/skills/buildroot-development ;;
-    kernel)    echo linux-embedded/skills/kernel-driver-development ;;
-    android)   echo linux-embedded/skills/android-aosp ;;
+    zephyr)    echo .ai/skills/mcu/zephyr-development ;;
+    esp-idf)   echo .ai/skills/mcu/esp-idf-development ;;
+    freertos)  echo .ai/skills/mcu/freertos-mcuxpresso ;;
+    stm32)     echo .ai/skills/mcu/stm32-hal-development ;;
+    nuttx)     echo .ai/skills/mcu/nuttx-development ;;
+    yocto)     echo .ai/skills/linux-embedded/yocto-openembedded ;;
+    torizon)   echo .ai/skills/linux-embedded/torizon-os ;;
+    buildroot) echo .ai/skills/linux-embedded/buildroot-development ;;
+    kernel)    echo .ai/skills/linux-embedded/kernel-driver-development ;;
+    android)   echo .ai/skills/linux-embedded/android-aosp ;;
   esac
 }
 stack_build() {
@@ -179,8 +179,11 @@ step "Project: ${c_b}$NAME${c_0}   track: $TRACK   stack: $STACK   board: $BOARD
 # ------------------------------------------------------------------ trim tracks
 cd "$DEST"
 if [ $KEEP_ALL -eq 0 ] && [ -n "$OTHER_DIR" ]; then
-  rm -rf "$OTHER_DIR"
-  ok "removed unused track: $OTHER_DIR/"
+  rm -rf ".ai/skills/$OTHER_DIR" ".ai/agents/$OTHER_DIR" ".ai/rules/$OTHER_DIR" ".ai/tracks/$OTHER_DIR"
+  if [ "$OTHER_DIR" = mcu ]; then
+    rm -rf .ai/skills/mcu-tools mcu/tools
+  fi
+  ok "removed unused harness track: $OTHER_DIR"
 else
   ok "keeping both tracks"
 fi
@@ -287,27 +290,27 @@ $(stack_test "$STACK")
 ## Working with AI agents in this repository
 
 \`AGENTS.md\` is the canonical instruction file. Claude Code 2.1.277+, Codex and other
-native readers load it directly; generated harness adapters serve tools that need their
+native readers load it directly; generated pointer files serve tools that need another
 own entrypoint. **Keep its project-context section current** — it is what stops an agent
 from producing confident, wrong answers about this hardware.
 
 Available to agents in this repository:
 
-- Rules in \`shared/rules/\` — hardware safety, toolchain determinism, testing layers, security
-- Skills in \`$TRACK_DIR/skills/\` — loaded on demand per task
-- Review agents in \`$TRACK_DIR/agents/\` and \`shared/agents/\`
+- Rules in \`.ai/rules/shared/\` — hardware safety, toolchain determinism, testing layers, security
+- Skills in \`.ai/skills/<track>/\` — loaded on demand per task
+- Review agents in \`.ai/agents/<track>/\` and \`.ai/agents/shared/\`
 
 Irreversible hardware operations (fuse burning, bootloader overwrite, mass erase,
 fleet updates) always require explicit human confirmation. See
-\`shared/rules/10-hardware-safety.md\`.
+\`.ai/rules/shared/10-hardware-safety.md\`.
 
 ## Repository layout
 
 \`\`\`
 AGENTS.md            agent instructions + this project's hardware context
-shared/              rules, roles, cross-cutting skills, review agents
-$(for t in $TRACK_DIR; do printf '%-20s %s\n' "$t/" "track rules, skills and agents"; done)
-hooks/               destructive-command guard, quality gate, secret scan
+.ai/                 shared and track-specific skills, agents, rules, roles and instructions
+mcu/tools/            executable MCU tools, when this project uses the MCU track
+.ai/hooks/               destructive-command guard, quality gate, secret scan
 docs/                getting started, skill index, multi-harness notes
 docs/decisions/      architecture decision records
 \`\`\`
@@ -402,7 +405,7 @@ jobs:
         run: |
           base="${{ github.event.pull_request.base.sha || 'HEAD~1' }}"
           files=$(git diff --name-only "$base"...HEAD || true)
-          [ -n "$files" ] && ./hooks/secret-scan.sh $files || echo "no files to scan"
+          [ -n "$files" ] && ./.ai/hooks/secret-scan.sh $files || echo "no files to scan"
 
   quality:
     runs-on: ubuntu-latest
@@ -414,7 +417,7 @@ jobs:
         run: |
           base="${{ github.event.pull_request.base.sha || 'HEAD~1' }}"
           files=$(git diff --name-only "$base"...HEAD || true)
-          [ -n "$files" ] && ./hooks/embedded-quality-gate.sh $files || echo "no files to check"
+          [ -n "$files" ] && ./.ai/hooks/embedded-quality-gate.sh $files || echo "no files to check"
 
   # TODO: add the project's own build job.
   # build:
@@ -429,11 +432,11 @@ ok ".github/workflows/checks.yml written"
 # ------------------------------------------------------------------- git hooks
 if [ -d .git ]; then
   mkdir -p .git/hooks
-  ln -sf ../../hooks/pre-commit .git/hooks/pre-commit
+  ln -sf ../../.ai/hooks/pre-commit .git/hooks/pre-commit
   ok "git pre-commit hook installed"
 else
   warn "not a git repository — install the hook after 'git init':"
-  warn "  ln -sf ../../hooks/pre-commit .git/hooks/pre-commit"
+  warn "  ln -sf ../../.ai/hooks/pre-commit .git/hooks/pre-commit"
 fi
 
 # ------------------------------------------------------------------- finalize

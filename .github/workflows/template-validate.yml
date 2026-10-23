@@ -25,18 +25,18 @@ jobs:
 
       - name: Shell scripts parse
         run: |
-          for f in scripts/*.sh hooks/*.sh hooks/pre-commit install.sh .devcontainer/setup.sh; do
+          for f in scripts/*.sh .ai/hooks/*.sh .ai/hooks/pre-commit install.sh .devcontainer/setup.sh; do
             bash -n "$f" || { echo "::error::syntax error in $f"; exit 1; }
           done
 
       - name: shellcheck (errors block)
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
-          shellcheck -S error scripts/*.sh hooks/*.sh hooks/pre-commit install.sh .devcontainer/setup.sh
+          shellcheck -S error scripts/*.sh .ai/hooks/*.sh .ai/hooks/pre-commit install.sh .devcontainer/setup.sh
 
       - name: shellcheck (warnings, advisory)
         continue-on-error: true
-        run: shellcheck -S warning scripts/*.sh hooks/*.sh hooks/pre-commit install.sh .devcontainer/setup.sh
+        run: shellcheck -S warning scripts/*.sh .ai/hooks/*.sh .ai/hooks/pre-commit install.sh .devcontainer/setup.sh
 
   scaffold:
     name: scaffold a project (${{ matrix.stack }})
@@ -61,12 +61,15 @@ jobs:
         run: |
           cd "/tmp/proj-${{ matrix.stack }}"
           set -e
-          for f in AGENTS.md README.md .template-initialized \
+          for f in AGENTS.md README.md .ai/README.md .template-initialized \
                    .github/workflows/checks.yml docs/decisions \
                    .embedded-agentic/project.json .embedded-agentic/local.json.example; do
             [ -e "$f" ] || { echo "::error::missing $f"; exit 1; }
           done
-          [ ! -e CLAUDE.md ] || { echo "::error::remove CLAUDE.md so Claude Code reads AGENTS.md directly"; exit 1; }
+          [ ! -e CLAUDE.md ] || { echo "::error::remove CLAUDE.md so agents use AGENTS.md"; exit 1; }
+          for d in .claude .codex .cursor .continue; do
+            [ ! -e "$d" ] || { echo "::error::vendor config directory must not exist: $d"; exit 1; }
+          done
           python3 -c "import json,sys; json.load(open('.embedded-agentic/project.json'))" \
             || { echo "::error::project.json is not valid JSON"; exit 1; }
           for f in CONTRIBUTING.md .github/ISSUE_TEMPLATE templates scripts/lib; do
@@ -132,11 +135,11 @@ jobs:
           set +e
           fail=0
           block() {
-            ./hooks/guard-destructive-hardware.sh "$1" >/dev/null 2>&1
+            ./.ai/hooks/guard-destructive-hardware.sh "$1" >/dev/null 2>&1
             [ $? -eq 2 ] || { echo "::error::not blocked: $1"; fail=1; }
           }
           allow() {
-            ./hooks/guard-destructive-hardware.sh "$1" >/dev/null 2>&1
+            ./.ai/hooks/guard-destructive-hardware.sh "$1" >/dev/null 2>&1
             [ $? -eq 0 ] || { echo "::error::wrongly blocked: $1"; fail=1; }
           }
           block "dd if=core-image.wic of=/dev/sda bs=4M"
@@ -156,9 +159,9 @@ jobs:
           mkdir -p /tmp/ss && cd /tmp/ss
           printf 'CONFIG_WIFI_PASSWORD="hunter2swordfish"\n' > prj.conf
           printf 'IMAGE_FEATURES += "debug-tweaks"\n' > local.conf
-          "$GITHUB_WORKSPACE/hooks/secret-scan.sh" prj.conf local.conf >/dev/null 2>&1
+          "$GITHUB_WORKSPACE/.ai/hooks/secret-scan.sh" prj.conf local.conf >/dev/null 2>&1
           [ $? -ne 0 ] || { echo "::error::secret scan did not fire"; exit 1; }
           printf 'CONFIG_LOG=y\n' > clean.conf
-          "$GITHUB_WORKSPACE/hooks/secret-scan.sh" clean.conf >/dev/null 2>&1
+          "$GITHUB_WORKSPACE/.ai/hooks/secret-scan.sh" clean.conf >/dev/null 2>&1
           [ $? -eq 0 ] || { echo "::error::false positive on a clean file"; exit 1; }
           echo ok

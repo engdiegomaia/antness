@@ -1,1 +1,0 @@
-../../linux-embedded/agents/yocto-recipe-reviewer.md
