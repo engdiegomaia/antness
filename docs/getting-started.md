@@ -13,7 +13,7 @@ On GitHub: **Use this template → Create a new repository**.
 
 Or from the CLI:
 ```bash
-gh repo create my-project --template micron-iot/embedded-agentic --private --clone
+gh repo create my-project --template micron-iot/antness --private --clone
 cd my-project
 ```
 
@@ -73,7 +73,7 @@ path will produce confident, wrong answers — and may propose something irrever
 
 ```bash
 git add -A
-git commit -m "chore: initialize from embedded-agentic"
+git commit -m "chore: initialize from antness"
 git push
 ```
 
@@ -82,8 +82,8 @@ git push
 ## B. Add to an existing project
 
 ```bash
-git clone https://github.com/micron-iot/embedded-agentic ~/tools/embedded-agentic
-~/tools/embedded-agentic/install.sh ~/work/my-bsp --track linux
+git clone https://github.com/micron-iot/antness ~/tools/antness
+~/tools/antness/install.sh ~/work/my-bsp --track linux
 ```
 
 | Mode | Behaviour |

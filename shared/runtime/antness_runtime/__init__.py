@@ -1,4 +1,4 @@
-"""Shared runtime for embedded-agentic executable tools.
+"""Shared runtime for antness executable tools.
 
 Standard library only. Every tool in mcu/tools/ imports from here so that
 configuration resolution, risk gating and result formatting are identical

@@ -124,7 +124,7 @@ DEST="${OUT:-$SRC}"
 
 if [ $INTERACTIVE -eq 1 ] && [ -t 0 ]; then
   say
-  say "${c_b}embedded-agentic — project setup${c_0}"
+  say "${c_b}antness — project setup${c_0}"
   say "${c_d}Answers go into AGENTS.md, which every agent reads before touching hardware.${c_0}"
   say
   read -r -p "Project name [$NAME]: " a; [ -n "$a" ] && NAME="$a"
@@ -191,7 +191,7 @@ fi
 # ------------------------------------------------------------- project AGENTS.md
 PRIMARY_SKILL="$(stack_skill "$STACK")"
 {
-  sed "s|^# AGENTS.md — Embedded Agentic Development Environment$|# AGENTS.md — $NAME|" AGENTS.md
+  sed "s|^# AGENTS.md — Antness Development Environment$|# AGENTS.md — $NAME|" AGENTS.md
   cat <<EOF
 
 ---
@@ -268,7 +268,7 @@ cat > README.md <<EOF
 
 <!-- One paragraph: what this device does and who it is for. -->
 
-Started from the [embedded-agentic](https://github.com/micron-iot/embedded-agentic) template.
+Started from the [antness](https://github.com/micron-iot/antness) template.
 
 ## Hardware
 
@@ -324,16 +324,16 @@ EOF
 ok "README.md written"
 
 # ------------------------------------------------- machine-readable context
-mkdir -p .embedded-agentic
-if [ -f templates/embedded-agentic/project.json ]; then
+mkdir -p .antness
+if [ -f templates/antness/project.json ]; then
   BUILD_BACKEND="$(stack_build_backend "$STACK")"
   python3 "$SRC/scripts/lib/gen_project_config.py" \
       --name "$NAME" --board "$BOARD" --stack "$STACK" \
       --build-backend "$BUILD_BACKEND" \
-      --template templates/embedded-agentic/project.json \
-      --out .embedded-agentic/project.json
-  cp templates/embedded-agentic/local.json.example .embedded-agentic/local.json.example
-  ok ".embedded-agentic/ created (project.json versioned, local.json.example to copy)"
+      --template templates/antness/project.json \
+      --out .antness/project.json
+  cp templates/antness/local.json.example .antness/local.json.example
+  ok ".antness/ created (project.json versioned, local.json.example to copy)"
 fi
 
 # ------------------------------------------------------------------ scaffolding
@@ -367,7 +367,7 @@ rm -rf .github/ISSUE_TEMPLATE
 rm -f .github/PULL_REQUEST_TEMPLATE.md CONTRIBUTING.md
 rm -f .github/workflows/template-validate.yml .github/workflows/template-bootstrap.yml .github/TEMPLATE_SETUP.md
 rm -f install.sh
-rm -rf templates/mcu-project templates/linux-project templates/embedded-agentic
+rm -rf templates/mcu-project templates/linux-project templates/antness
 rm -rf scripts/lib
 rmdir templates 2>/dev/null || true
 ok "template-only files removed"
@@ -449,7 +449,7 @@ track=$TRACK
 stack=$STACK
 board=$BOARD
 initialized=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-template=embedded-agentic
+template=antness
 EOF
 
 say
@@ -458,14 +458,14 @@ say
 say "${c_b}Done.${c_0}"
 say
 say "Next:"
-say "  1. ${c_b}Fill in AGENTS.md and .embedded-agentic/project.json${c_0}"
+say "  1. ${c_b}Fill in AGENTS.md and .antness/project.json${c_0}"
 say "     ${c_d}Part number, memory map, recovery path, real build command.${c_0}"
 say "     ${c_d}This does more for agent output quality than anything else.${c_0}"
-say "     ${c_d}cp .embedded-agentic/local.json.example .embedded-agentic/local.json${c_0}"
+say "     ${c_d}cp .antness/local.json.example .antness/local.json${c_0}"
 say "     ${c_d}then: python mcu/tools/flow/scripts/flow_cli.py diagnose${c_0}"
 say "  2. Read docs/getting-started.md"
 say "  3. Track upstream improvements:"
-say "     ${c_d}git remote add upstream https://github.com/micron-iot/embedded-agentic.git${c_0}"
+say "     ${c_d}git remote add upstream https://github.com/micron-iot/antness.git${c_0}"
 say "  4. Commit:"
-say "     ${c_d}git add -A && git commit -m 'chore: initialize $NAME from embedded-agentic'${c_0}"
+say "     ${c_d}git add -A && git commit -m 'chore: initialize $NAME from antness'${c_0}"
 say

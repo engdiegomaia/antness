@@ -1,6 +1,30 @@
-# embedded-agentic
+# antness
 
-[![template](https://img.shields.io/badge/GitHub-use%20this%20template-2ea44f?logo=github)](https://github.com/micron-iot/embedded-agentic/generate)
+```text
+     .---.       Antness
+    /     \\
+   |  .-.  |
+   | (   ) |---o
+    \\ `-' /   o
+     `---'
+```
+
+Antness is the hardware-aware embedded development CLI taking shape in this repository.
+The initial command entry point is `python3 antness.py`; it can inspect and diagnose a
+project, preview or create `.antness/project.json`, and delegate MCU builds to the existing
+build CLI. Use `--format json` for machine-readable inspection. `init` only writes when
+passed `--apply`, and refuses to overwrite an existing configuration. Linux build/test
+commands can run when explicitly declared in the Antness project configuration.
+
+```bash
+python3 antness.py --help
+python3 antness.py project inspect
+python3 antness.py doctor
+python3 antness.py init                 # preview; no files written
+python3 antness.py init --apply         # create configuration after review
+```
+
+[![template](https://img.shields.io/badge/GitHub-use%20this%20template-2ea44f?logo=github)](https://github.com/micron-iot/antness/generate)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 **A GitHub template for starting embedded projects that AI coding agents can work in
@@ -15,7 +39,7 @@ and Continue without maintaining separate sources of truth.
 
 ## Start a project
 
-**Click ["Use this template" → "Create a new repository"](https://github.com/micron-iot/embedded-agentic/generate)**, then:
+**Click ["Use this template" → "Create a new repository"](https://github.com/micron-iot/antness/generate)**, then:
 
 ```bash
 git clone https://github.com/<you>/<your-project>.git
@@ -26,7 +50,7 @@ cd <your-project>
 Or entirely from the CLI:
 
 ```bash
-gh repo create my-project --template micron-iot/embedded-agentic --private --clone
+gh repo create my-project --template micron-iot/antness --private --clone
 cd my-project && ./scripts/init-project.sh
 ```
 
@@ -66,8 +90,8 @@ quality than everything else in this repository.
 ### Adding it to an existing project
 
 ```bash
-git clone https://github.com/micron-iot/embedded-agentic ~/tools/embedded-agentic
-~/tools/embedded-agentic/install.sh /path/to/existing-project --track linux
+git clone https://github.com/micron-iot/antness ~/tools/antness
+~/tools/antness/install.sh /path/to/existing-project --track linux
 ```
 
 Installs the environment alongside your code instead of scaffolding a new repository.
@@ -101,9 +125,9 @@ AGENTS.md                  canonical universal entrypoint
 mcu/tools/                 executable build, probe, serial and flow CLIs
 .ai/hooks/                     destructive-command guard, quality gate, secret scan, pre-commit
 .ai/mcp/                       MCP server catalogue for embedded work
-shared/runtime/            embedded_agentic — config resolution, risk gating,
+shared/runtime/            antness_runtime — config resolution, risk gating,
                            structured results (stdlib only, Python 3.9+)
-.embedded-agentic/         machine-readable project context (project.json versioned,
+.antness/         machine-readable project context (project.json versioned,
                            local.json gitignored)
 scripts/                   init-project, sync-agent-configs, validate, update-from-upstream
 docs/                      getting started, skill index, multi-harness guide

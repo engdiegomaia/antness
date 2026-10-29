@@ -1,4 +1,4 @@
-# AGENTS.md — Embedded Agentic Development Environment
+# AGENTS.md — Antness Development Environment
 
 > Canonical, vendor-neutral instruction file. Edit this file and the scoped track files;
 > generated harness adapters are compatibility outputs, never sources of truth.
@@ -113,9 +113,9 @@ board never carries to another. Chaining through `flow` does not bypass this.
 ## 6b. Machine-readable project context
 
 ```
-.embedded-agentic/project.json   versioned   board, chip, interface, recovery path, budgets
-.embedded-agentic/local.json     gitignored  tool paths, probe serial, operation_mode
-.embedded-agentic/state.json     gitignored  last successful run — a fallback, never truth
+.antness/project.json   versioned   board, chip, interface, recovery path, budgets
+.antness/local.json     gitignored  tool paths, probe serial, operation_mode
+.antness/state.json     gitignored  last successful run — a fallback, never truth
 ```
 
 `project.json` is the same hardware context described in this file's project section, in

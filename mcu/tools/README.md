@@ -39,9 +39,9 @@ decision belongs to the project (`.ai/rules/shared/20-toolchain-determinism.md`)
 ## Configuration
 
 ```
-.embedded-agentic/project.json   versioned    board, device, interface, recovery path
-.embedded-agentic/local.json     gitignored   tool paths, probe serial, operation_mode
-.embedded-agentic/state.json     gitignored   last successful run — a fallback, never truth
+.antness/project.json   versioned    board, device, interface, recovery path
+.antness/local.json     gitignored   tool paths, probe serial, operation_mode
+.antness/state.json     gitignored   last successful run — a fallback, never truth
 ```
 
 Precedence: `CLI > project > local > state > PATH > default`, with tool paths never read

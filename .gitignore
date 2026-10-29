@@ -56,10 +56,10 @@ venv/
 boot-*.log
 session-*.log
 
-# Local workflow state is stored under .embedded-agentic/.
+# Local workflow state is stored under .antness/.
 
 # Machine-local tool configuration and run state.
 # project.json IS versioned — it is the team's shared hardware context.
-.embedded-agentic/local.json
-.embedded-agentic/state.json
-.embedded-agentic/implementation.json
+.antness/local.json
+.antness/state.json
+.antness/implementation.json

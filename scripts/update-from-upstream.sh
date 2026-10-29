@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Pull agent-environment improvements from the embedded-agentic template into a project
+# Pull agent-environment improvements from the antness template into a project
 # started from it, without touching project code or the project context in AGENTS.md.
 #
 #   ./scripts/update-from-upstream.sh [--remote upstream] [--ref main] [--dry-run]
 set -euo pipefail
 
 REMOTE="upstream"; REF="main"; DRY=0
-UPSTREAM_URL="https://github.com/micron-iot/embedded-agentic.git"
+UPSTREAM_URL="https://github.com/micron-iot/antness.git"
 
 while [ $# -gt 0 ]; do
   case "$1" in

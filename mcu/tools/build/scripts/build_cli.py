@@ -25,9 +25,9 @@ from _bootstrap import setup  # noqa: E402
 
 setup(__file__)
 
-from embedded_agentic import ConfigError, Resolver, emit, fail, ok, run, which_tool  # noqa: E402
-from embedded_agentic.result import Result, Timer  # noqa: E402
-from embedded_agentic.risk import ConfirmationRequired, check_operation  # noqa: E402
+from antness_runtime import ConfigError, Resolver, emit, fail, ok, run, which_tool  # noqa: E402
+from antness_runtime.result import Result, Timer  # noqa: E402
+from antness_runtime.risk import ConfirmationRequired, check_operation  # noqa: E402
 
 SECTION = "build"
 
@@ -273,7 +273,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                      details={"workspace": str(ws), "evidence": evidence},
                      next_steps=[
                          "Pin it explicitly: {\"build\": {\"backend\": \"west|idf|cmake|make|nuttx\"}} "
-                         "in .embedded-agentic/project.json",
+                         "in .antness/project.json",
                      ]),
                 args.json,
             )

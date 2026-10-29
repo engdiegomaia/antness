@@ -16,11 +16,11 @@ permissions:
   issues: write
 
 env:
-  TEMPLATE_REPO: micron-iot/embedded-agentic
+  TEMPLATE_REPO: micron-iot/antness
 
 jobs:
   bootstrap:
-    if: ${{ github.repository != 'micron-iot/embedded-agentic' && github.run_number == 1 }}
+    if: ${{ github.repository != 'micron-iot/antness' && github.run_number == 1 }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

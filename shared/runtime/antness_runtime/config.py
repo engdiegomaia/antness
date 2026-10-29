@@ -3,9 +3,9 @@
 Precedence, highest first:
 
   1. CLI         explicit argument for this invocation
-  2. project     .embedded-agentic/project.json  — versioned, shared with the team
-  3. local       .embedded-agentic/local.json    — this machine only, gitignored
-  4. state       .embedded-agentic/state.json    — last successful run, gitignored
+  2. project     .antness/project.json  — versioned, shared with the team
+  3. local       .antness/local.json    — this machine only, gitignored
+  4. state       .antness/state.json    — last successful run, gitignored
   5. PATH        active discovery of a tool executable
   6. default     the tool's documented fallback
 
@@ -33,7 +33,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-CONFIG_DIR = ".embedded-agentic"
+CONFIG_DIR = ".antness"
 PROJECT_FILE = "project.json"
 LOCAL_FILE = "local.json"
 STATE_FILE = "state.json"
@@ -57,7 +57,7 @@ class ConfigError(Exception):
 
 
 def find_workspace(start: Optional[Path] = None) -> Path:
-    """Walk upward looking for .embedded-agentic/, a VCS root, or AGENTS.md."""
+    """Walk upward looking for .antness/, a VCS root, or AGENTS.md."""
     here = (start or Path.cwd()).resolve()
     for candidate in (here, *here.parents):
         if (candidate / CONFIG_DIR).is_dir():

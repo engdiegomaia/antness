@@ -29,9 +29,9 @@ from _bootstrap import setup  # noqa: E402
 
 setup(__file__)
 
-from embedded_agentic import ConfigError, Resolver, emit, fail, ok, run, which_tool  # noqa: E402
-from embedded_agentic.result import Result, Timer  # noqa: E402
-from embedded_agentic.risk import ConfirmationRequired, check_operation  # noqa: E402
+from antness_runtime import ConfigError, Resolver, emit, fail, ok, run, which_tool  # noqa: E402
+from antness_runtime.result import Result, Timer  # noqa: E402
+from antness_runtime.risk import ConfirmationRequired, check_operation  # noqa: E402
 
 SECTION = "probe"
 
@@ -136,7 +136,7 @@ def jlink_script(commands: List[str]) -> Path:
 def jlink_run(r: Resolver, args: argparse.Namespace, commands: List[str]) -> Tuple[List[str], Optional[Path]]:
     exe = r.resolve_tool("jlink_exe", args.tool, ["JLinkExe", "JLink.exe"])
     if not exe:
-        raise ConfigError("JLinkExe not found. Set probe.jlink_exe in .embedded-agentic/local.json")
+        raise ConfigError("JLinkExe not found. Set probe.jlink_exe in .antness/local.json")
     device = r.resolve_project("device", args.device, required=True,
                                describe="J-Link device name, e.g. STM32H743ZI or GD32F470ZG")
     interface = str(r.resolve_project("interface", args.interface, default="SWD")).upper()
@@ -183,7 +183,7 @@ def jlink_commands(action: str, args: argparse.Namespace) -> List[str]:
 def openocd_argv(r: Resolver, args: argparse.Namespace, commands: List[str]) -> List[str]:
     exe = r.resolve_tool("openocd_exe", args.tool, ["openocd"])
     if not exe:
-        raise ConfigError("openocd not found. Set probe.openocd_exe in .embedded-agentic/local.json")
+        raise ConfigError("openocd not found. Set probe.openocd_exe in .antness/local.json")
     interface_cfg = r.resolve_project("openocd_interface", None, required=True,
                                       describe="e.g. interface/stlink.cfg or interface/cmsis-dap.cfg")
     target_cfg = r.resolve_project("openocd_target", None, required=True,
@@ -224,7 +224,7 @@ def openocd_commands(action: str, args: argparse.Namespace) -> List[str]:
 def probers_argv(r: Resolver, args: argparse.Namespace, action: str) -> List[str]:
     exe = r.resolve_tool("probe_rs_exe", args.tool, ["probe-rs"])
     if not exe:
-        raise ConfigError("probe-rs not found. Set probe.probe_rs_exe in .embedded-agentic/local.json")
+        raise ConfigError("probe-rs not found. Set probe.probe_rs_exe in .antness/local.json")
     chip = r.resolve_project("chip", args.device, required=True,
                              describe="probe-rs chip name, e.g. STM32H743ZITx (run `probe-rs chip list`)")
     base = [exe]
@@ -252,7 +252,7 @@ def probers_argv(r: Resolver, args: argparse.Namespace, action: str) -> List[str
 def pyocd_argv(r: Resolver, args: argparse.Namespace, action: str) -> List[str]:
     exe = r.resolve_tool("pyocd_exe", args.tool, ["pyocd"])
     if not exe:
-        raise ConfigError("pyocd not found. Set probe.pyocd_exe in .embedded-agentic/local.json")
+        raise ConfigError("pyocd not found. Set probe.pyocd_exe in .antness/local.json")
     target = r.resolve_project("pyocd_target", args.device, required=True,
                                describe="pyOCD target, e.g. stm32h743zitx (run `pyocd list --targets`)")
     common = ["-t", str(target)]
@@ -343,7 +343,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 fail("list", "no probe tool installed on this host",
                      details={"evidence": evidence},
                      next_steps=["Install one of: JLinkExe, probe-rs, openocd, pyocd",
-                                 "Or set its path in .embedded-agentic/local.json under probe"]),
+                                 "Or set its path in .antness/local.json under probe"]),
                 args.json,
             )
         return emit(
@@ -359,7 +359,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         return emit(
             fail(args.action, "no probe tool found", details={"evidence": evidence},
                  next_steps=["Install one of: JLinkExe, probe-rs, openocd, pyocd",
-                             "Or set its path in .embedded-agentic/local.json under probe"]),
+                             "Or set its path in .antness/local.json under probe"]),
             args.json,
         )
 

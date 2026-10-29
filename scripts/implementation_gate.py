@@ -15,7 +15,7 @@ import tempfile
 from datetime import datetime, timezone
 
 
-STATE_PATH = pathlib.Path(".embedded-agentic/implementation.json")
+STATE_PATH = pathlib.Path(".antness/implementation.json")
 STAGES = ("ready", "implemented", "verified", "reviewed")
 
 

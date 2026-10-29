@@ -1,4 +1,4 @@
-# Core Principles — Embedded Agentic Development
+# Core Principles — Antness Development
 
 > Applies to both tracks. Track-specific rules override these where they conflict.
 

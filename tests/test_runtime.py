@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for shared/runtime/embedded_agentic.
+"""Tests for shared/runtime/antness_runtime.
 
 Standard library only, no pytest — this has to run on a build host that has
 nothing but python3 installed.
@@ -16,7 +16,7 @@ import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "shared" / "runtime"))
 
-from embedded_agentic import config, result, risk  # noqa: E402
+from antness_runtime import config, result, risk  # noqa: E402
 
 
 def workspace_with(project=None, local=None, state=None):

@@ -25,10 +25,10 @@ from _bootstrap import setup  # noqa: E402
 
 setup(__file__)
 
-from embedded_agentic import ConfigError, Resolver, emit, fail, ok  # noqa: E402
-from embedded_agentic.discover import list_serial_ports, resolve_serial_port  # noqa: E402
-from embedded_agentic.result import Result, Timer  # noqa: E402
-from embedded_agentic.risk import ConfirmationRequired, check_operation  # noqa: E402
+from antness_runtime import ConfigError, Resolver, emit, fail, ok  # noqa: E402
+from antness_runtime.discover import list_serial_ports, resolve_serial_port  # noqa: E402
+from antness_runtime.result import Result, Timer  # noqa: E402
+from antness_runtime.risk import ConfirmationRequired, check_operation  # noqa: E402
 
 SECTION = "serial"
 
@@ -147,7 +147,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                  details={"candidates": resolution.get("candidates", [])},
                  parameter_context=r.parameter_context(),
                  next_steps=["Name the device: --port <stable id from `serial list`>",
-                             "Or pin it for this machine in .embedded-agentic/local.json: "
+                             "Or pin it for this machine in .antness/local.json: "
                              '{"serial": {"port": "/dev/serial/by-id/..."}}']),
             args.json,
         )

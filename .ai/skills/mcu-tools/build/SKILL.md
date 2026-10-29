@@ -47,7 +47,7 @@ build's behaviour.
 ## Configuration
 
 ```jsonc
-// .embedded-agentic/project.json — versioned, shared with the team
+// .antness/project.json — versioned, shared with the team
 {
   "build": {
     "backend": "west",
@@ -61,7 +61,7 @@ build's behaviour.
 ```
 
 ```jsonc
-// .embedded-agentic/local.json — this machine only, gitignored
+// .antness/local.json — this machine only, gitignored
 {
   "build": {
     "west_exe": "/home/you/.local/bin/west",

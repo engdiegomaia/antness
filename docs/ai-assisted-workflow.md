@@ -12,7 +12,7 @@ agent or harness performs the work.
    observable outcome and acceptance criteria. Keep hardware operations and unrelated
    cleanup out of the step.
 3. Start a step with `scripts/implementation_gate.py start`. The tool stores progress in
-   `.embedded-agentic/implementation.json`, which is local and git-ignored.
+   `.antness/implementation.json`, which is local and git-ignored.
 4. Implement only the active step. Record what changed to move from `ready` to
    `implemented`.
 5. Run the narrowest checks that establish the acceptance criteria, then relevant wider

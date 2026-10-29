@@ -29,9 +29,9 @@ from _bootstrap import setup  # noqa: E402
 
 REPO = setup(__file__)
 
-from embedded_agentic import ConfigError, Resolver, emit, fail, ok  # noqa: E402
-from embedded_agentic.config import lint_layers  # noqa: E402
-from embedded_agentic.result import Result, Timer  # noqa: E402
+from antness_runtime import ConfigError, Resolver, emit, fail, ok  # noqa: E402
+from antness_runtime.config import lint_layers  # noqa: E402
+from antness_runtime.result import Result, Timer  # noqa: E402
 
 SECTION = "flow"
 
@@ -183,7 +183,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         if not (ports.get("details", {}).get("ports")):
             missing.append("no serial device visible on this host")
         if not r.project:
-            missing.append(".embedded-agentic/project.json is absent — every parameter "
+            missing.append(".antness/project.json is absent — every parameter "
                            "will have to be passed on the command line")
 
         details = {

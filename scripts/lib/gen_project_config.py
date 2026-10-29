@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate .embedded-agentic/project.json for a newly scaffolded project.
+"""Generate .antness/project.json for a newly scaffolded project.
 
 Takes the template, fills in what init-project.sh already knows, and drops the
 sections that do not apply to the chosen stack. A Yocto project has no probe

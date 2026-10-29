@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Validates an embedded-agentic installation: required files, skill frontmatter,
+# Validates an antness installation: required files, skill frontmatter,
 # agent frontmatter, adapter freshness, and hook executability.
 #
 #   ./validate.sh [target-dir]      (defaults to the repo root)
@@ -101,10 +101,10 @@ echo "Executable tools"
 if [ -d mcu/tools ]; then
   runtime="shared/runtime"
   if [ -n "$runtime" ]; then
-    if PYTHONPATH="$runtime" python3 -c "import embedded_agentic" 2>/dev/null; then
+    if PYTHONPATH="$runtime" python3 -c "import antness_runtime" 2>/dev/null; then
       ok "runtime package imports"
     else
-      bad "shared/runtime/embedded_agentic does not import"
+      bad "shared/runtime/antness_runtime does not import"
     fi
   else
     bad "mcu/tools present but shared/runtime is missing"
@@ -176,11 +176,11 @@ fi
 
 echo
 echo "Config layer hygiene"
-if [ -d .embedded-agentic ]; then
+if [ -d .antness ]; then
   findings="$(python3 -c "
 import sys, pathlib
 sys.path.insert(0, 'shared/runtime')
-from embedded_agentic import config
+from antness_runtime import config
 print('\n'.join(config.lint_layers(pathlib.Path('.'))))
 " 2>/dev/null)"
   if [ -n "$findings" ]; then

@@ -32,7 +32,7 @@ mkdir -p "$TARGET"
 TARGET="$(cd "$TARGET" && pwd)"
 [ "$TARGET" != "$SRC" ] || { echo "target must differ from the source repo" >&2; exit 1; }
 
-echo "Installing embedded-agentic"
+echo "Installing antness"
 echo "  source: $SRC"
 echo "  target: $TARGET"
 echo "  track:  $TRACK    mode: $MODE"

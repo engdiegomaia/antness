@@ -63,14 +63,14 @@ jobs:
           set -e
           for f in AGENTS.md README.md .ai/README.md .template-initialized \
                    .github/workflows/checks.yml docs/decisions \
-                   .embedded-agentic/project.json .embedded-agentic/local.json.example; do
+                   .antness/project.json .antness/local.json.example; do
             [ -e "$f" ] || { echo "::error::missing $f"; exit 1; }
           done
           [ ! -e CLAUDE.md ] || { echo "::error::remove CLAUDE.md so agents use AGENTS.md"; exit 1; }
           for d in .claude .codex .cursor .continue; do
             [ ! -e "$d" ] || { echo "::error::vendor config directory must not exist: $d"; exit 1; }
           done
-          python3 -c "import json,sys; json.load(open('.embedded-agentic/project.json'))" \
+          python3 -c "import json,sys; json.load(open('.antness/project.json'))" \
             || { echo "::error::project.json is not valid JSON"; exit 1; }
           for f in CONTRIBUTING.md .github/ISSUE_TEMPLATE templates scripts/lib; do
             [ -e "$f" ] && { echo "::error::template-only file survived: $f"; exit 1; }
@@ -119,10 +119,10 @@ jobs:
       - name: Config layer hygiene is enforced
         run: |
           set -e
-          mkdir -p /tmp/lintws/.embedded-agentic
+          mkdir -p /tmp/lintws/.antness
           echo '{"probe": {"jlink_exe": "/opt/SEGGER/JLinkExe"}}' \
-            > /tmp/lintws/.embedded-agentic/project.json
-          PYTHONPATH=shared/runtime python3 -c "import pathlib; from embedded_agentic import config; f=config.lint_layers(pathlib.Path('/tmp/lintws')); assert f, 'lint missed an absolute tool path in project.json'; print(chr(10).join(f))"
+            > /tmp/lintws/.antness/project.json
+          PYTHONPATH=shared/runtime python3 -c "import pathlib; from antness_runtime import config; f=config.lint_layers(pathlib.Path('/tmp/lintws')); assert f, 'lint missed an absolute tool path in project.json'; print(chr(10).join(f))"
 
   guards:
     name: safety guard behaviour
